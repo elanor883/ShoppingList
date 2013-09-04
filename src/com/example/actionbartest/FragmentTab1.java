@@ -1,7 +1,9 @@
 package com.example.actionbartest;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.DatePickerDialog;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 
@@ -26,6 +29,13 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class FragmentTab1 extends SherlockFragment {
 
+	static final String KEY_CAT = "cat";
+	static final String KEY_DATE = "date";
+	static final String KEY_PRICE = "price";
+	static final String KEY_TITLE = "title";
+	static final String KEY_SUBTITLE = "sub";
+	static final String KEY_CORNER = "corner";
+	ArrayList<HashMap<String, String>> itemList = new ArrayList<HashMap<String, String>>();
 	Button dd;
 	private View selected_item = null;
 	private int offset_x = 0;
@@ -53,12 +63,16 @@ public class FragmentTab1 extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab2.xml
-		final View view = inflater.inflate(R.layout.fragmenttab2, container,
+		final View view = inflater.inflate(R.layout.fragmenttab1, container,
 				false);
 
 		// ViewGroup vg = (ViewGroup)findViewById(R.id.vg);
 
-		dd = (Button) view.findViewById(R.id.button_1);
+		dd = (Button) view.findViewById(R.id.add_item_button);
+		final ListView lv = (ListView) view.findViewById(R.id.listitem_lv);
+
+		final ShopListViewAdapter adapterList = new ShopListViewAdapter(getActivity(), itemList);
+		lv.setAdapter(adapterList);
 
 		dd.setOnClickListener(new OnClickListener() {
 
@@ -67,16 +81,25 @@ public class FragmentTab1 extends SherlockFragment {
 
 				// custom dialog
 				final Dialog dialog = new Dialog(getActivity());
+				
 				dialog.setContentView(R.layout.customdialog);
 				dialog.setTitle("Add new item");
-
+				
 				// set the custom dialog components - text, image and button
 				final EditText text_price = (EditText) dialog
 						.findViewById(R.id.editText1);
 				// text.setText("Android custom dialog example!");
 				final DatePicker dp = (DatePicker) dialog
 						.findViewById(R.id.datePicker1);
-
+				//dp.setCalendarViewShown(false);
+				int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		        if (currentapiVersion >= 11) {
+		          try {
+		            Method m = dp.getClass().getMethod("setCalendarViewShown", boolean.class);
+		            m.invoke(dp, false);
+		          }
+		          catch (Exception e) {} // eat exception in our case
+		        }
 				Button dialogButton = (Button) dialog
 						.findViewById(R.id.dialogbutton);
 				// if button is clicked, close the custom dialog
@@ -91,13 +114,17 @@ public class FragmentTab1 extends SherlockFragment {
 				 */
 				final Spinner spin = (Spinner) dialog
 						.findViewById(R.id.spinner1);
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-						getActivity(), android.R.layout.simple_spinner_dropdown_item,
-						list);
+				final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getActivity(),
+						android.R.layout.simple_spinner_dropdown_item, list);
 				spin.setAdapter(adapter);
 				dialogButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						
+
+						if(text_price.length()>0){
+						
 						year = dp.getYear();
 						month = dp.getMonth() + 1;
 						day = dp.getDayOfMonth();
@@ -129,7 +156,20 @@ public class FragmentTab1 extends SherlockFragment {
 
 						db.addContact(slist);
 						db.close();
+
+						HashMap<String, String> map = new HashMap<String, String>();
+						// color =
+						map.put(KEY_TITLE, cat);
+						map.put(KEY_SUBTITLE, date);
+						map.put(KEY_CORNER, "" + price+ " ˆ");
+						itemList.add(map);
+						//lv.setAdapter(adapter);
+						adapterList.notifyDataSetChanged();
+						
+						
+
 						dialog.dismiss();
+						}
 					}
 				});
 

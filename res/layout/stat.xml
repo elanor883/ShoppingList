@@ -1,0 +1,31 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:fillViewport="true">
+
+    <LinearLayout
+                 android:orientation="vertical"  
+                 android:layout_height="fill_parent"  
+                 android:layout_width="fill_parent">
+
+  
+
+
+
+  <com.androidplot.xy.XYPlot
+    android:id="@+id/mySimpleXYPlot"
+    android:layout_width="fill_parent"
+    android:layout_height="300dp"
+    title="This month's cost summary"/>
+  
+
+     <com.androidplot.pie.PieChart
+            android:id="@+id/mySimplePieChart"
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            androidPlot.title="This month's costing rate"
+            androidPlot.graphWidget.gridLinePaint.color="#000000"/>
+
+      </LinearLayout>   
+</ScrollView>

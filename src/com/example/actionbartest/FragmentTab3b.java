@@ -25,8 +25,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 public class FragmentTab3b extends SherlockFragment {
 
 	static final String KEY_TITLE = "title";
-	static final String KEY_ARTIST = "artist";
-	static final String KEY_DURATION = "duration";
+	static final String KEY_SUBTITLE = "sub";
+	static final String KEY_CORNER = "corner";
 
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -64,9 +64,8 @@ public class FragmentTab3b extends SherlockFragment {
 		 * "42 ˆ");
 		 */
 
-		List<ShopList> shoplist = db.getAllShops();
+		List<ShopList> shoplist = db.getSumCostPerDay();
 
-		final ArrayList<String> mylist = new ArrayList<String>();
 
 		for (ShopList cn : shoplist) {
 			String log = "Category: " + cn.getTypeName() + " ,Price: "
@@ -80,8 +79,8 @@ public class FragmentTab3b extends SherlockFragment {
 
 			Log.d("datum", "" + year + " " + month + " " + day);
 			map.put(KEY_TITLE, date);
-			map.put(KEY_ARTIST, dayOfWeek(year, month, day));
-			map.put(KEY_DURATION, "" + cn.getPrice() + " ˆ");
+			map.put(KEY_SUBTITLE, dayOfWeek(year, month, day));
+			map.put(KEY_CORNER, "" + cn.getPrice() + " ˆ");
 			songsList.add(map);
 			Log.d("Name: ", log);
 		}

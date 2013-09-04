@@ -53,8 +53,8 @@ public class ShopListViewAdapter extends BaseAdapter {
  
         // Setting all values in listview
         title.setText(song.get(FragmentTab3b.KEY_TITLE));
-        artist.setText(song.get(FragmentTab3b.KEY_ARTIST));
-        duration.setText(song.get(FragmentTab3b.KEY_DURATION));
+        artist.setText(song.get(FragmentTab3b.KEY_SUBTITLE));
+        duration.setText(song.get(FragmentTab3b.KEY_CORNER));
        // imageLoader.DisplayImage(song.get(CustomizedListView.KEY_THUMB_URL), thumb_image);
         return vi;
     }

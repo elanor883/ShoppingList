@@ -30,6 +30,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String KEY_TYPE_NAME = "type_name";
 	private static final String KEY_PRICE = "price";
 	private static final String KEY_DATE = "date";
+	private static final String KEY_RESID = "resid";
+	private static final String KEY_C_ID = "c_id";
 
 	public DatabaseHandler(Context fragmentTab4) {
 		super(fragmentTab4, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,7 +47,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.execSQL(CREATE_SHOPLIST_TABLE);
 		
 		String CREATE_CATEGORIES_TABLE = "CREATE TABLE " + TABLE_CATEGORIES + "("
-		+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_TYPE_NAME + " TEXT" + ")";
+		+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_TYPE_NAME + " TEXT, " + KEY_RESID +" TEXT, "+ KEY_C_ID + " INTEGER "+")";
 		Log.d("Db", CREATE_CATEGORIES_TABLE);
 		db.execSQL(CREATE_CATEGORIES_TABLE);
 	}
@@ -86,7 +88,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		ContentValues values = new ContentValues();
 		values.put(KEY_TYPE_NAME, cat.getTypeName()); // Contact Name
-
+		values.put(KEY_RESID, cat.getResid());
+		values.put(KEY_C_ID, cat.getCId());
 		// Inserting Row
 		db.insert(TABLE_CATEGORIES, null, values);
 		db.close(); // Closing database connection
@@ -189,5 +192,85 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		cursor.close();
 		return cat;
 	}
+	
+	public List<Categories> getFullCategories()
+	{
+		String selectQuery = "SELECT * FROM "  + TABLE_CATEGORIES;
+		List<Categories> catList = new ArrayList<Categories>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		if (cursor.moveToFirst()) {
+			do {
+				Categories cat = new Categories();
+				cat.setId(Integer.parseInt(cursor.getString(0)));
+				cat.setTypeName(cursor.getString(1));
+				cat.setResid(cursor.getString(2));
+				cat.setCId(Integer.parseInt(cursor.getString(3)));
+				// Adding contact to list
+				catList.add(cat);
+			} while (cursor.moveToNext());
+		}
 
+		cursor.close();
+		return catList;
+	}
+	
+	/*
+	 * select mydate, sum(price) from table1
+		group by mydate; 
+
+	 * */
+	
+	
+	public List<ShopList> getCostPerDayPerType()
+	{
+		String selectQuery = "select date, type_name, sum(price) from shoplist GROUP BY date, type_name";
+		
+		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				ShopList shop_list = new ShopList();
+				shop_list.setDate(cursor.getString(0));
+				shop_list.setTypeName(cursor.getString(1));
+				shop_list.setPrice(Integer.parseInt(cursor.getString(2)));
+				
+				// Adding contact to list
+				shoppinglistList.add(shop_list);
+			} while (cursor.moveToNext());
+		}
+
+		cursor.close();
+		// return contact list
+		return shoppinglistList;
+	}
+	 
+	public List<ShopList> getSumCostPerDay()
+	{
+		String selectQuery = "select date, sum(price) from shoplist GROUP BY date";
+		
+		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				ShopList shop_list = new ShopList();
+				shop_list.setDate(cursor.getString(0));
+				shop_list.setPrice(Integer.parseInt(cursor.getString(1)));
+				
+				// Adding contact to list
+				shoppinglistList.add(shop_list);
+			} while (cursor.moveToNext());
+		}
+
+		cursor.close();
+		// return contact list
+		return shoppinglistList;
+	}
+	
 }
