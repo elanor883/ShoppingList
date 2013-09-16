@@ -7,14 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,6 +34,9 @@ public class FragmentTab3b extends SherlockFragment {
 	static final String KEY_TITLE = "title";
 	static final String KEY_SUBTITLE = "sub";
 	static final String KEY_CORNER = "corner";
+	static String selected;
+	ListView lv;
+	LinearLayout l1, l2;
 
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -36,7 +45,14 @@ public class FragmentTab3b extends SherlockFragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
+		
 		super.onViewCreated(view, savedInstanceState);
+		
+
+	}
+
+	public boolean isLandscape() {
+		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 	}
 
 	@SuppressLint("NewApi")
@@ -44,14 +60,33 @@ public class FragmentTab3b extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab2.xml
-		View view = inflater.inflate(R.layout.fragmenttab3, container, false);
-		final ListView lv = (ListView) view.findViewById(R.id.listView1);
+		
+		View view = inflater.inflate(R.layout.fragmenttab32, container, false);
+		Log.d("vissza", "vissza2");
+		
+		lv = (ListView) view.findViewById(R.id.listView1);
+		l1 = (LinearLayout) view.findViewById(R.id.mainlay);
+		l2 = (LinearLayout) view.findViewById(R.id.sublay);
 
+		if(!isLandscape())
+		{
+			Log.d("oncreate", "ujra meghivodot");
+			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			p1.weight = 1;
+					
+			l1.setLayoutParams(p1);
+			
+			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			p2.weight = 0;
+			l2.setLayoutParams(p2);
+		}
+		final List<String> dateList = new ArrayList<String>();
+		
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
 		// db.addContact(new ShopList("Food", 21, "2013-12-17"));
 		// db.addContact(new ShopList("Party", 8, "2013-07-17" ));
 		// db.addContact(new ShopList("Travel", 10, "2013-07-27"));
-		//db.addContact(new ShopList("Accomodation", 215, "2013-07-18"));
+		// db.addContact(new ShopList("Accomodation", 215, "2013-07-18"));
 
 		ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
 
@@ -67,7 +102,6 @@ public class FragmentTab3b extends SherlockFragment {
 
 		List<ShopList> shoplist = db.getSumCostPerDay();
 
-
 		for (ShopList cn : shoplist) {
 			String log = "Category: " + cn.getTypeName() + " ,Price: "
 					+ cn.getPrice();
@@ -82,7 +116,9 @@ public class FragmentTab3b extends SherlockFragment {
 			map.put(KEY_TITLE, date);
 			map.put(KEY_SUBTITLE, dayOfWeek(year, month, day));
 			map.put(KEY_CORNER, "" + cn.getPrice() + " ˆ");
+			dateList.add(date);
 			songsList.add(map);
+			
 			Log.d("Name: ", log);
 		}
 		ArrayList<String> cat = db.getCategories();
@@ -135,8 +171,21 @@ public class FragmentTab3b extends SherlockFragment {
 		 * ListAdapter lp;
 		 */
 		// songsList.add(map2);
-		ShopListViewAdapter adapter = new ShopListViewAdapter(getActivity(), songsList);
+		final ShopListViewAdapter adapter = new ShopListViewAdapter(getActivity(),
+				songsList);
 		lv.setAdapter(adapter);
+		
+		lv.setOnItemClickListener(new OnItemClickListener() {
+
+		    public void onItemClick(AdapterView<?> parent, View view, int position,
+		            long id) {
+		       // Toast.makeText(getBaseContext(), mListItems.get(position), 1000).show();
+		    	selected = dateList.get(position);
+		    	Log.d("frag3", selected);
+		    	showDetails(position);
+		    }
+
+		});
 
 		// Click event for single list row
 		/*
@@ -150,34 +199,12 @@ public class FragmentTab3b extends SherlockFragment {
 		return view;
 	}
 
-	private class StableArrayAdapter extends ArrayAdapter<String> {
 
-		HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-		public StableArrayAdapter(Context context, int textViewResourceId,
-				List<String> objects) {
-			super(context, textViewResourceId, objects);
-			for (int i = 0; i < objects.size(); ++i) {
-				mIdMap.put(objects.get(i), i);
-			}
-		}
-
-		@Override
-		public long getItemId(int position) {
-			String item = getItem(position);
-			return mIdMap.get(item);
-		}
-
-		@Override
-		public boolean hasStableIds() {
-			return true;
-		}
-
-	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		Log.d("vissza", "vissza");
 		setUserVisibleHint(true);
 	}
 
@@ -205,5 +232,64 @@ public class FragmentTab3b extends SherlockFragment {
 		return weekday;
 
 	}
+	
+	public void showDetails(int index) {
+		
+		if (isLandscape()) {
+			
+			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			p1.weight = 2;
+					
+			l1.setLayoutParams(p1);
+			
+			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			p2.weight = 1;
+			l2.setLayoutParams(p2);
+			
+			FragmentTab3b2 aFrag = new FragmentTab3b2();
+			getFragmentManager().beginTransaction()
+			        .replace(R.id.detail32, aFrag).commit();
+			
+		}
+		else {
+			
+			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			p1.weight = 0;
+					
+			l1.setLayoutParams(p1);
+			
+			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			p2.weight = 1;
+			l2.setLayoutParams(p2);
+			
+		
+			FragmentTab3b2 aFrag = new FragmentTab3b2();
+			FragmentTransaction ft = getFragmentManager().beginTransaction();
+			ft.replace(R.id.detail32, aFrag);
+			ft.addToBackStack(null);
+			ft.commit();
+			
+		}
+		/*else {
+
+		Intent intent = new Intent();
+		intent.setClass(this, DetailsActivity.class);
+		intent.putExtra("index", index);
+		startActivity(intent);
+		}*/
+		
+	}
+	
+
+	
+public void onResume(){
+	super.onResume();
+	
+	
+}
+
+public void teszt(){
+	Log.d("kak", "kaki");
+}
 
 }

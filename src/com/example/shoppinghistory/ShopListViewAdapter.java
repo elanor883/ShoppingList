@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.example.actionbartest.R;
  
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,7 +20,7 @@ public class ShopListViewAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<HashMap<String, String>> data;
     private static LayoutInflater inflater=null;
-
+    TextView title, duration, artist;
  
     public ShopListViewAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
@@ -40,14 +41,21 @@ public class ShopListViewAdapter extends BaseAdapter {
         return position;
     }
  
+    public String getItemDate(int position) {
+        if(title!=null){
+    	return (String) title.getText();
+        }
+		return null;
+    }
+    
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
         if(convertView==null)
             vi = inflater.inflate(R.layout.list_row, null);
  
-        TextView title = (TextView)vi.findViewById(R.id.title); // title
-        TextView artist = (TextView)vi.findViewById(R.id.artist); // artist name
-        TextView duration = (TextView)vi.findViewById(R.id.duration); // duration
+        title = (TextView)vi.findViewById(R.id.title); // title
+        artist = (TextView)vi.findViewById(R.id.artist); // artist name
+        duration = (TextView)vi.findViewById(R.id.duration); // duration
         //ImageView thumb_image=(ImageView)vi.findViewById(R.id.list_image); // thumb image
  
         HashMap<String, String> song = new HashMap<String, String>();
