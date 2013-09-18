@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
     android:orientation="horizontal"
-    android:padding="5dip" >
+    android:padding="0dip" >
  
 
  
@@ -19,8 +19,7 @@
         android:layout_width="50sp"
         android:layout_height="50sp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-       />
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:id="@+id/category"
