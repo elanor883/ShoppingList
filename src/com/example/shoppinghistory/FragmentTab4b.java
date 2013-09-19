@@ -26,7 +26,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.example.actionbartest.R;
+
 
 public class FragmentTab4b extends SherlockFragment {
 

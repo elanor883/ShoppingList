@@ -298,4 +298,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return shoppinglistList;
 	}
 	
+	public String getResId(String current_cat)
+	{
+		String selectQuery = "SELECT "+ KEY_RESID + " FROM "  + TABLE_CATEGORIES + " WHERE " + KEY_TYPE_NAME + "='" + current_cat +"'";
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		String result = null;
+		Log.d("lekerdezes", selectQuery);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				result = cursor.getString(0);
+				// Adding contact to list
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		return result;
+	}
+	
 }

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.example.actionbartest.R;
+
 
 public class DetailFragment extends SherlockFragment {
 	private int mIndex = 0;

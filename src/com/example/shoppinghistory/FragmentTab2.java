@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.example.actionbartest.R;
+
 
 public class FragmentTab2 extends SherlockFragment {
 
@@ -52,6 +52,12 @@ public class FragmentTab2 extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab1.xml
+		
+		 // super.onCreate(savedInstanceState);
+	      //  if(null == savedInstanceState){
+	             //set you initial fragment object 
+	        
+
 		final View view = inflater.inflate(R.layout.fragmenttab2, container,
 				false);
 		Button plus = (Button) view.findViewById(R.id.plusCat);
@@ -83,6 +89,7 @@ public class FragmentTab2 extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
+				setRetainInstance(true);
 				final Dialog dialog = new Dialog(getActivity());
 				dialog.setContentView(R.layout.customdialog2);
 				dialog.setTitle("Add new category");
@@ -550,13 +557,15 @@ public class FragmentTab2 extends SherlockFragment {
 			}
 
 		});
-
+	        
 		return view;
+	        
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		
 		setUserVisibleHint(true);
 	}
 

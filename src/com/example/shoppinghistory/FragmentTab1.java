@@ -26,7 +26,7 @@ import android.widget.Spinner;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.example.actionbartest.R;
+
 
 public class FragmentTab1 extends SherlockFragment {
 

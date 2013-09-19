@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.example.actionbartest.R;
+
  
 public class FragmentTab4 extends SherlockFragment implements
         ActionBar.TabListener {

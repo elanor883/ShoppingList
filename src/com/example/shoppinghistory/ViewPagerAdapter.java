@@ -9,7 +9,7 @@ import com.actionbarsherlock.app.*;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
  
     // Declare the number of ViewPager pages
-    final int PAGE_COUNT = 5;
+    final int PAGE_COUNT = 4;
  
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);

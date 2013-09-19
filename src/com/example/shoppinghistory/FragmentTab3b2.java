@@ -18,10 +18,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.example.actionbartest.R;
+
 
 public class FragmentTab3b2 extends SherlockFragment {
 
@@ -31,7 +32,8 @@ public class FragmentTab3b2 extends SherlockFragment {
 	static final String KEY_TITLE = "title";
 	static final String KEY_SUBTITLE = "sub";
 	static final String KEY_CORNER = "corner";
-
+	static final String KEY_IMG = "img";
+	
 	ArrayList<HashMap<String, String>> itemList = new ArrayList<HashMap<String, String>>();
 	Button dd;
 	int year;
@@ -97,10 +99,11 @@ public class FragmentTab3b2 extends SherlockFragment {
 		}
 
 		i = 0;
-		final ShopListViewAdapter adapterList = new ShopListViewAdapter(
+		final LabelCostListAdapter adapterList = new LabelCostListAdapter(
 				getActivity(), itemList);
 		lv.setAdapter(adapterList);
 
+		db = new DatabaseHandler(getSherlockActivity());
 		for (Pair<String, Integer> current : monthlyCost) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			// color =
@@ -108,10 +111,12 @@ public class FragmentTab3b2 extends SherlockFragment {
 				map.put(KEY_TITLE, current.first);
 				// map.put(KEY_SUBTITLE, "vmi");
 				map.put(KEY_CORNER, "" + current.second + " ˆ");
+				map.put(KEY_IMG, db.getResId(current.first));
 				itemList.add(map);
 			}
 		}
 		// lv.setAdapter(adapter);
+		db.close();
 		adapterList.notifyDataSetChanged();
 
 		if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE){
@@ -123,12 +128,16 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 		    public void onItemClick(AdapterView<?> parent, View view, int position,
 		            long id) {
-		       // Toast.makeText(getBaseContext(), mListItems.get(position), 1000).show();
-		    	FragmentTab3b fr3 = new FragmentTab3b();
+		        Log.d("mukodik ez a szar?", "ja, megnyomtad");
+		    	FragmentTab3b.pos = -1;
+		        FragmentTab3b fr3 = new FragmentTab3b();
 		    	
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
 				ft.replace(R.id.detail32, fr3);
-				ft.addToBackStack(null);
+				
+				//fr3.setPos(-1);
+				Log.d("visszaallit", ""+FragmentTab3b.pos);
+			//	ft.addToBackStack(null);
 				ft.commit();
 				
 		    }

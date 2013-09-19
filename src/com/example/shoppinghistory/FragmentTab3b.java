@@ -11,12 +11,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -27,7 +30,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.example.actionbartest.R;
 
 public class FragmentTab3b extends SherlockFragment {
 
@@ -36,8 +38,12 @@ public class FragmentTab3b extends SherlockFragment {
 	static final String KEY_CORNER = "corner";
 	static String selected;
 	ListView lv;
+	static int pos;
 	LinearLayout l1, l2;
 
+	
+
+	
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
 		return super.getSherlockActivity();
@@ -62,7 +68,11 @@ public class FragmentTab3b extends SherlockFragment {
 		// Get the view from fragmenttab2.xml
 		
 		View view = inflater.inflate(R.layout.fragmenttab32, container, false);
+		
+		view.setBackgroundColor(Color.WHITE);
 		Log.d("vissza", "vissza2");
+		
+		pos = -1;
 		
 		lv = (ListView) view.findViewById(R.id.listView1);
 		l1 = (LinearLayout) view.findViewById(R.id.mainlay);
@@ -182,10 +192,15 @@ public class FragmentTab3b extends SherlockFragment {
 		       // Toast.makeText(getBaseContext(), mListItems.get(position), 1000).show();
 		    	selected = dateList.get(position);
 		    	Log.d("frag3", selected);
+		    	view.setSelected(true);
+		    	pos = position;
+		    	adapter.setSelectedIndex(position);
 		    	showDetails(position);
 		    }
 
 		});
+		
+
 
 		// Click event for single list row
 		/*
@@ -196,6 +211,21 @@ public class FragmentTab3b extends SherlockFragment {
 		 * 
 		 * } });
 		 */
+		
+	    if(savedInstanceState != null) {
+	        int currentTab = savedInstanceState.getInt("CurrentTab", pos);
+	        
+	        Log.d("current", ""+currentTab);
+	        if(isLandscape() && currentTab != -1){
+		    	selected = dateList.get(currentTab);
+		    	Log.d("frag3", selected);
+		    	view.setSelected(true);
+		    	adapter.setSelectedIndex(currentTab);
+		    	showDetails(currentTab);
+	        }
+	        /* Set currently selected tab */
+	    }
+	    
 		return view;
 	}
 
@@ -204,6 +234,9 @@ public class FragmentTab3b extends SherlockFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		Log.d("visszaallit", ""+pos);
+		outState.putInt("CurrentTab", pos);
+		outState.putString("Selected", selected);
 		Log.d("vissza", "vissza");
 		setUserVisibleHint(true);
 	}
@@ -233,17 +266,18 @@ public class FragmentTab3b extends SherlockFragment {
 
 	}
 	
+
 	public void showDetails(int index) {
 		
 		if (isLandscape()) {
 			
 			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
-			p1.weight = 2;
+			p1.weight = 1;
 					
 			l1.setLayoutParams(p1);
 			
 			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
-			p2.weight = 1;
+			p2.weight = 2;
 			l2.setLayoutParams(p2);
 			
 			FragmentTab3b2 aFrag = new FragmentTab3b2();
@@ -266,7 +300,7 @@ public class FragmentTab3b extends SherlockFragment {
 			FragmentTab3b2 aFrag = new FragmentTab3b2();
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			ft.replace(R.id.detail32, aFrag);
-			ft.addToBackStack(null);
+			//ft.addToBackStack(null);
 			ft.commit();
 			
 		}
@@ -290,6 +324,11 @@ public void onResume(){
 
 public void teszt(){
 	Log.d("kak", "kaki");
+}
+
+public void setPos(int ind) {
+	// TODO Auto-generated method stub
+	pos = ind;
 }
 
 }
