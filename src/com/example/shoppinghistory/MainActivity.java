@@ -23,18 +23,14 @@ public class MainActivity extends SherlockFragmentActivity {
 	ActionBar mActionBar;
 	ViewPager mPager;
 	boolean default_theme;
+	boolean dark_bkg = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Get the view from activity_main.xml
-		 if(savedInstanceState != null) {
-		        boolean setting = savedInstanceState.getBoolean("defaultTheme", false);
-		        if(setting){
-		        	this.setTheme(R.style.Sherlock___Theme_DarkActionBar);
-		        }
-		 }
+
+		 
 		setContentView(R.layout.activity_main);
 
 		// Activate Navigation Mode Tabs
@@ -118,13 +114,16 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		case R.id.imp_exp_btn:
 			// write your code here
-
+			DatabaseHandler db = new DatabaseHandler(this);
+			db.exportDB();
+			db.close();
+			
 			return true;
 
 		case R.id.settings_btn:
 			
-			default_theme = false;
-			
+			dark_bkg = false;
+
 			return true;
 
 		default:
@@ -140,4 +139,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		Log.d("FOS", "msg");
 		outState.putBoolean("defaultTheme", default_theme);
 	}
+	
+
 }

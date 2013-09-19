@@ -8,9 +8,11 @@ import java.util.List;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -67,6 +69,19 @@ public class FragmentTab1 extends SherlockFragment {
 		final View view = inflater.inflate(R.layout.fragmenttab1, container,
 				false);
 
+		boolean dark_bkg = true;
+		SherlockFragmentActivity parent = getSherlockActivity();
+
+		if (parent instanceof MainActivity) {
+			dark_bkg = ((MainActivity) parent).dark_bkg;
+		}
+
+		if (!dark_bkg) {
+			view.setBackgroundColor(Color.WHITE);
+
+		} else {
+			view.setBackgroundColor(Color.BLACK);
+		}
 		// ViewGroup vg = (ViewGroup)findViewById(R.id.vg);
 
 		dd = (Button) view.findViewById(R.id.add_item_button);
@@ -80,7 +95,7 @@ public class FragmentTab1 extends SherlockFragment {
 			// color =
 			map.put(KEY_TITLE, s.getTypeName());
 			map.put(KEY_SUBTITLE, s.getDate());
-			map.put(KEY_CORNER, "" + s.getPrice()+ " ˆ");
+			map.put(KEY_CORNER, "" + s.getPrice() + " ˆ");
 			itemList.add(map);
 		}
 		// adapter.notifyDataSetChanged();
@@ -90,13 +105,13 @@ public class FragmentTab1 extends SherlockFragment {
 		// ArrayList<HashMap<String, String>> labelList = new
 		// ArrayList<HashMap<String, String>>();
 
-	//	final LabelListAdapter adapter = new LabelListAdapter(getActivity(),
-	//			labelList);
+		// final LabelListAdapter adapter = new LabelListAdapter(getActivity(),
+		// labelList);
 
-	//	lv.setAdapter(adapter);
-		
-		
-		final ShopListViewAdapter adapterList = new ShopListViewAdapter(getActivity(), itemList);
+		// lv.setAdapter(adapter);
+
+		final ShopListViewAdapter adapterList = new ShopListViewAdapter(
+				getActivity(), itemList);
 		lv.setAdapter(adapterList);
 
 		dd.setOnClickListener(new OnClickListener() {
@@ -106,25 +121,26 @@ public class FragmentTab1 extends SherlockFragment {
 
 				// custom dialog
 				final Dialog dialog = new Dialog(getActivity());
-				
+
 				dialog.setContentView(R.layout.customdialog);
 				dialog.setTitle("Add new item");
-				
+
 				// set the custom dialog components - text, image and button
 				final EditText text_price = (EditText) dialog
 						.findViewById(R.id.editText1);
 				// text.setText("Android custom dialog example!");
 				final DatePicker dp = (DatePicker) dialog
 						.findViewById(R.id.datePicker1);
-				//dp.setCalendarViewShown(false);
+				// dp.setCalendarViewShown(false);
 				int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		        if (currentapiVersion >= 11) {
-		          try {
-		            Method m = dp.getClass().getMethod("setCalendarViewShown", boolean.class);
-		            m.invoke(dp, false);
-		          }
-		          catch (Exception e) {} // eat exception in our case
-		        }
+				if (currentapiVersion >= 11) {
+					try {
+						Method m = dp.getClass().getMethod(
+								"setCalendarViewShown", boolean.class);
+						m.invoke(dp, false);
+					} catch (Exception e) {
+					} // eat exception in our case
+				}
 				Button dialogButton = (Button) dialog
 						.findViewById(R.id.dialogbutton);
 				// if button is clicked, close the custom dialog
@@ -146,54 +162,51 @@ public class FragmentTab1 extends SherlockFragment {
 				dialogButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						
 
-						if(text_price.length()>0){
-						
-						year = dp.getYear();
-						month = dp.getMonth() + 1;
-						day = dp.getDayOfMonth();
-						// updateDisplay();
-						// Log.d("datepicker", ""+year+" "+month+" "+day);
+						if (text_price.length() > 0) {
 
-						if (month < 10 && day < 10) {
-							date = "" + year + "-0" + month + "-0" + day;
-							Log.d("datepicker1", date);
-						} else if (month < 10 && day >= 10) {
-							date = "" + year + "-0" + month + "-" + day;
-							Log.d("datepicker2", date);
-						} else if (month >= 10 && day < 10) {
-							date = "" + year + "-" + month + "-0" + day;
-							Log.d("datepicker3", date);
-						} else if (month >= 10 && day >= 10) {
-							date = "" + year + "-" + month + "-" + day;
-							Log.d("datepicker4", date);
-						}
+							year = dp.getYear();
+							month = dp.getMonth() + 1;
+							day = dp.getDayOfMonth();
+							// updateDisplay();
+							// Log.d("datepicker", ""+year+" "+month+" "+day);
 
-						cat = spin.getSelectedItem().toString();
-						price = Integer.parseInt(text_price.getText()
-								.toString());
-						Log.d("result", "" + date + " " + cat + " " + price);
+							if (month < 10 && day < 10) {
+								date = "" + year + "-0" + month + "-0" + day;
+								Log.d("datepicker1", date);
+							} else if (month < 10 && day >= 10) {
+								date = "" + year + "-0" + month + "-" + day;
+								Log.d("datepicker2", date);
+							} else if (month >= 10 && day < 10) {
+								date = "" + year + "-" + month + "-0" + day;
+								Log.d("datepicker3", date);
+							} else if (month >= 10 && day >= 10) {
+								date = "" + year + "-" + month + "-" + day;
+								Log.d("datepicker4", date);
+							}
 
-						ShopList slist = new ShopList(cat, price, date);
-						DatabaseHandler db = new DatabaseHandler(
-								getSherlockActivity());
+							cat = spin.getSelectedItem().toString();
+							price = Integer.parseInt(text_price.getText()
+									.toString());
+							Log.d("result", "" + date + " " + cat + " " + price);
 
-						db.addContact(slist);
-						db.close();
+							ShopList slist = new ShopList(cat, price, date);
+							DatabaseHandler db = new DatabaseHandler(
+									getSherlockActivity());
 
-						HashMap<String, String> map = new HashMap<String, String>();
-						// color =
-						map.put(KEY_TITLE, cat);
-						map.put(KEY_SUBTITLE, date);
-						map.put(KEY_CORNER, "" + price+ " ˆ");
-						itemList.add(map);
-						//lv.setAdapter(adapter);
-						adapterList.notifyDataSetChanged();
-						
-						
+							db.addContact(slist);
+							db.close();
 
-						dialog.dismiss();
+							HashMap<String, String> map = new HashMap<String, String>();
+							// color =
+							map.put(KEY_TITLE, cat);
+							map.put(KEY_SUBTITLE, date);
+							map.put(KEY_CORNER, "" + price + " ˆ");
+							itemList.add(map);
+							// lv.setAdapter(adapter);
+							adapterList.notifyDataSetChanged();
+
+							dialog.dismiss();
 						}
 					}
 				});
@@ -210,5 +223,7 @@ public class FragmentTab1 extends SherlockFragment {
 		super.onSaveInstanceState(outState);
 		setUserVisibleHint(true);
 	}
+	
+
 
 }

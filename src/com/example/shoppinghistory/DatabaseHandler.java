@@ -1,5 +1,10 @@
 package com.example.shoppinghistory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Date;
 import java.util.List;
 
@@ -7,10 +12,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import java.util.ArrayList;
-import android.database.Cursor;
-import android.util.Log;
 
+import java.util.ArrayList;
+
+import android.database.Cursor;
+import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -42,12 +50,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_SHOPLIST_TABLE = "CREATE TABLE " + TABLE_SHOPLIST + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_TYPE_NAME + " TEXT,"
-				+ KEY_PRICE + " INTEGER, " + KEY_DATE + " TEXT"+ ")";
+				+ KEY_PRICE + " INTEGER, " + KEY_DATE + " TEXT" + ")";
 		Log.d("Db", CREATE_SHOPLIST_TABLE);
 		db.execSQL(CREATE_SHOPLIST_TABLE);
-		
-		String CREATE_CATEGORIES_TABLE = "CREATE TABLE " + TABLE_CATEGORIES + "("
-		+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_TYPE_NAME + " TEXT, " + KEY_RESID +" TEXT, "+ KEY_C_ID + " INTEGER "+")";
+
+		String CREATE_CATEGORIES_TABLE = "CREATE TABLE " + TABLE_CATEGORIES
+				+ "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TYPE_NAME
+				+ " TEXT, " + KEY_RESID + " TEXT, " + KEY_C_ID + " INTEGER "
+				+ ")";
 		Log.d("Db", CREATE_CATEGORIES_TABLE);
 		db.execSQL(CREATE_CATEGORIES_TABLE);
 	}
@@ -75,7 +85,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_TYPE_NAME, contact.getTypeName()); // Contact Name
 		values.put(KEY_PRICE, contact.getPrice()); // Contact Phone
 		values.put(KEY_DATE, contact.getDate()); // Contact Phone
-		
 
 		// Inserting Row
 		db.insert(TABLE_SHOPLIST, null, values);
@@ -95,26 +104,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close(); // Closing database connection
 		Log.d("databasehandler", "Row added - categories");
 	}
-	
+
 	// Getting single contact
 	ShopList getShop(int id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_SHOPLIST, new String[] { KEY_ID,
-				KEY_TYPE_NAME, KEY_PRICE, KEY_DATE}, KEY_ID + "=?",
+				KEY_TYPE_NAME, KEY_PRICE, KEY_DATE }, KEY_ID + "=?",
 				new String[] { String.valueOf(id) }, null, null, null, null);
 		if (cursor != null)
 			cursor.moveToFirst();
 
 		ShopList shopping = new ShopList(Integer.parseInt(cursor.getString(0)),
-				cursor.getString(1), 
-				Integer.parseInt(cursor.getString(2)),
+				cursor.getString(1), Integer.parseInt(cursor.getString(2)),
 				cursor.getString(3));
-				
+
 		// return contact
 		return shopping;
 	}
-	
+
 	// Getting All Contacts
 	public List<ShopList> getAllShops() {
 		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
@@ -164,7 +172,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
 	}
 
-
 	// Getting contacts Count
 	public int getContactsCount() {
 		String countQuery = "SELECT  * FROM " + TABLE_SHOPLIST;
@@ -175,10 +182,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// return count
 		return cursor.getCount();
 	}
-	
-	public ArrayList<String> getCategories()
-	{
-		String selectQuery = "SELECT "+ KEY_TYPE_NAME + " FROM "  + TABLE_CATEGORIES;
+
+	public ArrayList<String> getCategories() {
+		String selectQuery = "SELECT " + KEY_TYPE_NAME + " FROM "
+				+ TABLE_CATEGORIES;
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		ArrayList<String> cat = new ArrayList<String>();
@@ -192,10 +199,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		cursor.close();
 		return cat;
 	}
-	
-	public List<Categories> getFullCategories()
-	{
-		String selectQuery = "SELECT * FROM "  + TABLE_CATEGORIES;
+
+	public List<Categories> getFullCategories() {
+		String selectQuery = "SELECT * FROM " + TABLE_CATEGORIES;
 		List<Categories> catList = new ArrayList<Categories>();
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -214,18 +220,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		cursor.close();
 		return catList;
 	}
-	
-	/*
-	 * select mydate, sum(price) from table1
-		group by mydate; 
 
-	 * */
-	
-	
-	public List<ShopList> getCostPerDayPerType()
-	{
+	/*
+	 * select mydate, sum(price) from table1 group by mydate;
+	 */
+
+	public List<ShopList> getCostPerDayPerType() {
 		String selectQuery = "select date, type_name, sum(price) from shoplist GROUP BY date, type_name";
-		
+
 		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -237,7 +239,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				shop_list.setDate(cursor.getString(0));
 				shop_list.setTypeName(cursor.getString(1));
 				shop_list.setPrice(Integer.parseInt(cursor.getString(2)));
-				
+
 				// Adding contact to list
 				shoppinglistList.add(shop_list);
 			} while (cursor.moveToNext());
@@ -247,11 +249,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// return contact list
 		return shoppinglistList;
 	}
-	 
-	public List<ShopList> getSumCostPerDay()
-	{
+
+	public List<ShopList> getSumCostPerDay() {
 		String selectQuery = "select date, sum(price) from shoplist GROUP BY date";
-		
+
 		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -262,7 +263,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				ShopList shop_list = new ShopList();
 				shop_list.setDate(cursor.getString(0));
 				shop_list.setPrice(Integer.parseInt(cursor.getString(1)));
-				
+
 				// Adding contact to list
 				shoppinglistList.add(shop_list);
 			} while (cursor.moveToNext());
@@ -272,11 +273,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// return contact list
 		return shoppinglistList;
 	}
-	
-	public List<ShopList> getLastFewItems()
-	{
+
+	public List<ShopList> getLastFewItems() {
 		String selectQuery = "select date, price, type_name from shoplist order by date desc limit 5";
-		
+
 		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -297,10 +297,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// return contact list
 		return shoppinglistList;
 	}
-	
-	public String getResId(String current_cat)
-	{
-		String selectQuery = "SELECT "+ KEY_RESID + " FROM "  + TABLE_CATEGORIES + " WHERE " + KEY_TYPE_NAME + "='" + current_cat +"'";
+
+	public String getResId(String current_cat) {
+		String selectQuery = "SELECT " + KEY_RESID + " FROM "
+				+ TABLE_CATEGORIES + " WHERE " + KEY_TYPE_NAME + "='"
+				+ current_cat + "'";
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		String result = null;
@@ -315,5 +316,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		cursor.close();
 		return result;
 	}
-	
+
+	public void exportDB() {
+		File sd = Environment.getExternalStorageDirectory();
+		File data = Environment.getDataDirectory();
+		FileChannel source = null;
+		FileChannel destination = null;
+		String currentDBPath = "/data/"+ "com.example.shoppinghistory" +"/databases/" + DATABASE_NAME;
+		String backupDBPath = DATABASE_NAME;
+		File currentDB = new File(data, currentDBPath);
+		File backupDB = new File(sd, backupDBPath);
+		try {
+			source = new FileInputStream(currentDB).getChannel();
+			destination = new FileOutputStream(backupDB).getChannel();
+			destination.transferFrom(source, 0, source.size());
+			source.close();
+			destination.close();
+			//Toast.makeText(this, "DB Exported!", Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
