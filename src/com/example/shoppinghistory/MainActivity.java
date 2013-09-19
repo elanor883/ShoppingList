@@ -1,5 +1,7 @@
 package com.example.shoppinghistory;
 
+import java.io.IOException;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -109,12 +111,12 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
+		DatabaseHandler db;
 		switch (item.getItemId()) {
 
 		case R.id.imp_exp_btn:
 			// write your code here
-			DatabaseHandler db = new DatabaseHandler(this);
+			db = new DatabaseHandler(this);
 			db.exportDB();
 			db.close();
 			
@@ -122,8 +124,16 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		case R.id.settings_btn:
 			
-			dark_bkg = false;
-
+			//dark_bkg = false;
+			db = new DatabaseHandler(this);
+			try {
+				db.importDB("/sdcard/shoppingManager");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			db.close();
+			
 			return true;
 
 		default:
