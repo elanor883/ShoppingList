@@ -1,23 +1,21 @@
 package com.example.shoppinghistory;
 
-import java.io.IOException;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import android.content.Intent;
-import android.content.res.Resources.Theme;
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
+@SuppressLint("NewApi")
 public class MainActivity extends SherlockFragmentActivity {
 	// Declare Tab Variable
 	Tab tab;
@@ -26,20 +24,29 @@ public class MainActivity extends SherlockFragmentActivity {
 	ViewPager mPager;
 	boolean default_theme;
 	boolean dark_bkg = true;
+	int activePage = 1;
+
+	Bundle mSavedInstanceState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if(!dark_bkg)
+		{
+		setTheme(R.style.Theme_Sherlock_Light);
+		}
 
-
-		 
 		setContentView(R.layout.activity_main);
 
+		
+		Log.d("MainActivity", "oncreate");
 		// Activate Navigation Mode Tabs
 		mActionBar = getSupportActionBar();
 		mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		default_theme = true;
-		
+		mSavedInstanceState = savedInstanceState;
+
 		// Locate ViewPager in activity_main.xml
 		mPager = (ViewPager) findViewById(R.id.pager);
 
@@ -57,10 +64,12 @@ public class MainActivity extends SherlockFragmentActivity {
 		};
 
 		mPager.setOnPageChangeListener(ViewPagerListener);
+		mPager.setBackgroundColor(Color.WHITE);
 		// Locate the adapter class called ViewPagerAdapter.java
 		ViewPagerAdapter viewpageradapter = new ViewPagerAdapter(fm);
 		// Set the View Pager Adapter into ViewPager
 		mPager.setAdapter(viewpageradapter);
+
 		// Capture tab button clicks
 		ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
@@ -68,6 +77,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
 				// Pass the position on tab click to ViewPager
 				mPager.setCurrentItem(tab.getPosition());
+				activePage=tab.getPosition();
 			}
 
 			@Override
@@ -108,33 +118,29 @@ public class MainActivity extends SherlockFragmentActivity {
 		inflater.inflate(R.menu.main, menu);
 		return true;
 	}
+	
 
-	@Override
+	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		DatabaseHandler db;
 		switch (item.getItemId()) {
 
 		case R.id.imp_exp_btn:
 			// write your code here
-			db = new DatabaseHandler(this);
-			db.exportDB();
-			db.close();
 			
+			 // db = new DatabaseHandler(this); db.exportDB(); db.close();
+			 
+			Log.d("MainActivity", "import");
+
+			//setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+			refreshFragments();
+			//recreate();
+			//setContentView(R.layout.activity_main);
+		dark_bkg = false;
+
 			return true;
 
-		case R.id.settings_btn:
-			
-			//dark_bkg = false;
-			db = new DatabaseHandler(this);
-			try {
-				db.importDB("/sdcard/shoppingManager");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			db.close();
-			
-			return true;
 
 		default:
 			break;
@@ -142,13 +148,63 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	public void refreshFragments() {
+
+		FragmentTab1 fragment1 = new FragmentTab1();
+		FragmentTab2 fragment2 = new FragmentTab2();
+		 FragmentTab3b fragment3 = new FragmentTab3b();
+		FragmentTab4b fragment4 = new FragmentTab4b();
+
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 	
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		Log.d("FOS", "msg");
-		outState.putBoolean("defaultTheme", default_theme);
+		if (activePage == 0) {
+			transaction.replace(R.id.fragment1_container, fragment1);
+			
+		}
+		Log.d("main", ""+activePage);
+/*		
+		else if (activePage == 2) {
+			transaction.replace(R.id.fragment1_container, fragment1);
+			transaction.replace(R.id.fragment2_container, fragment2);
+		//	transaction.replace(R.id.fragment3_container, fragment3);
+		}
+		
+		else if (activePage == 3) {
+
+			transaction.replace(R.id.fragment2_container, fragment2);
+			transaction.replace(R.id.fragment3_container, fragment3);
+			transaction.replace(R.id.fragment4_container, fragment4);
+		}
+		
+		else if (activePage == 4) {
+			transaction.replace(R.id.fragment3_container, fragment3);
+			transaction.replace(R.id.fragment4_container, fragment4);
+		}
+		// transaction.replace(R.id.fragment3_container, fragment3);
+		// transaction.replace(R.id.fragment4_container, fragment4);
+		// transaction.addToBackStack(null);
+		 * */
+		 
+		transaction.commit();
+
 	}
 	
-
+	
+/*
+	@Override
+    public void recreate()
+    {
+        if (android.os.Build.VERSION.SDK_INT >= 11)
+        {
+            super.recreate();
+        }
+        else
+        {
+        	dark_bkg = false;
+            startActivity(getIntent());
+           // finish();
+        }
+    }
+    */
 }

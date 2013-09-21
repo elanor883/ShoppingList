@@ -1,10 +1,12 @@
 package com.example.shoppinghistory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,9 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class FragmentTab2 extends SherlockFragment {
@@ -36,7 +41,13 @@ public class FragmentTab2 extends SherlockFragment {
 	ArrayList<HashMap<String, String>> labelList = new ArrayList<HashMap<String, String>>();
 	int resid = 0;
 	Button selected;
-
+	
+	LayoutInflater mInflater;
+	ViewGroup mContainer;
+	Bundle mSavedInstanceState;
+	View view;
+	SherlockFragmentActivity parent;
+	
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
 		return super.getSherlockActivity();
@@ -45,9 +56,33 @@ public class FragmentTab2 extends SherlockFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		
 
 	}
 
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+
+		if (isVisibleToUser) {
+			parent = getSherlockActivity();
+
+			if (parent instanceof MainActivity && ((MainActivity) parent).dark_bkg == false) {
+				((MainActivity) parent).activePage = 2;
+				view.setBackgroundColor(Color.WHITE);
+				Log.d("fr2", ""+((MainActivity) parent).activePage);
+				;
+			}
+		} else {
+			Log.d("fr1vis", "fos");
+		}
+
+	}
+
+	@Override
+	public void onStart(){
+		super.onStart();
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -58,8 +93,31 @@ public class FragmentTab2 extends SherlockFragment {
 	             //set you initial fragment object 
 	        
 
-		final View view = inflater.inflate(R.layout.fragmenttab2, container,
+		view = inflater.inflate(R.layout.fragmenttab2, container,
 				false);
+		
+		mInflater = inflater;
+		mContainer = container;
+		mSavedInstanceState = savedInstanceState;
+		
+		boolean dark_bkg = true;
+		SherlockFragmentActivity parent = getSherlockActivity();
+		setHasOptionsMenu(false);
+
+		if (parent instanceof MainActivity) {
+			dark_bkg = ((MainActivity) parent).dark_bkg;
+			Log.d("Fragment2", ""+dark_bkg);
+		}
+
+		if (!dark_bkg) {
+			view.setBackgroundColor(Color.WHITE);
+
+		} else {
+			view.setBackgroundColor(Color.BLACK);
+		}
+		
+		//setHasOptionsMenu(true);
+		
 		Button plus = (Button) view.findViewById(R.id.plusCat);
 		final ListView lv = (ListView) view.findViewById(R.id.cat_lv);
 
@@ -572,5 +630,56 @@ public class FragmentTab2 extends SherlockFragment {
 	private boolean checkString(String s) {
 		return s.matches("[a-zA-Z]+");
 	}
+	
+	
+
+	/*
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.imp_exp_btn:
+			// write your code here
+		
+			return true;
+
+		case R.id.settings_btn:
+			
+			//dark_bkg = false;
+			
+			return true;
+
+		default:
+			break;
+
+		}
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.imp_exp_btn:
+			// write your code here
+			Log.d("Fragment2", "IMPOOOOORT");
+			
+			
+			//super.onCreateView(mInflater, mContainer, mSavedInstanceState);
+			return true;
+
+		case R.id.settings_btn:
+			
+			Log.d("Fragment2", "IMPOOOOORT");
+		view.refreshDrawableState();	
+			
+			return true;
+
+		default:
+			break;
+
+		}
+		return super.onOptionsItemSelected(item);
+	}*/
 
 }

@@ -30,6 +30,9 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class FragmentTab3b extends SherlockFragment {
 
@@ -39,9 +42,14 @@ public class FragmentTab3b extends SherlockFragment {
 	static String selected;
 	ListView lv;
 	static int pos;
+	boolean darkbkg = true;
 	LinearLayout l1, l2;
-
 	
+	LayoutInflater mInflater;
+	ViewGroup mContainer;
+	Bundle mSavedInstanceState;
+	View view;
+	SherlockFragmentActivity parent;
 
 	
 	@Override
@@ -50,9 +58,33 @@ public class FragmentTab3b extends SherlockFragment {
 	}
 
 	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+
+		if (isVisibleToUser) {
+			parent = getSherlockActivity();
+
+			if (parent instanceof MainActivity && ((MainActivity) parent).dark_bkg == false) {
+				((MainActivity) parent).activePage = 3;
+				view.setBackgroundColor(Color.WHITE);
+				;
+			}
+		} else {
+			Log.d("fr1vis", "fos");
+		}
+
+	}
+	@Override
+	public void onStart(){
+		super.onStart();
+	}
+	
+	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		
 		super.onViewCreated(view, savedInstanceState);
+		
+
 		
 
 	}
@@ -67,10 +99,33 @@ public class FragmentTab3b extends SherlockFragment {
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab2.xml
 		
-		View view = inflater.inflate(R.layout.fragmenttab32, container, false);
+		view = inflater.inflate(R.layout.fragmenttab32, container, false);
+
+		boolean dark_bkg = true;
+		SherlockFragmentActivity parent = getSherlockActivity();
 		
-		view.setBackgroundColor(Color.WHITE);
+
+		if (parent instanceof MainActivity) {
+			dark_bkg = ((MainActivity) parent).dark_bkg;
+		}
+
+		if (!dark_bkg) {
+			view.setBackgroundColor(Color.WHITE);
+
+		} else {
+			view.setBackgroundColor(Color.BLACK);
+		}
+		
+
+		setHasOptionsMenu(false);
+		
 		Log.d("vissza", "vissza2");
+		
+		mInflater = inflater;
+		mContainer = container;
+		mSavedInstanceState = savedInstanceState;
+		
+		//setHasOptionsMenu(true);
 		
 		pos = -1;
 		
@@ -214,6 +269,7 @@ public class FragmentTab3b extends SherlockFragment {
 		
 	    if(savedInstanceState != null) {
 	        int currentTab = savedInstanceState.getInt("CurrentTab", pos);
+	       
 	        
 	        Log.d("current", ""+currentTab);
 	        if(isLandscape() && currentTab != -1){
@@ -224,8 +280,23 @@ public class FragmentTab3b extends SherlockFragment {
 		    	showDetails(currentTab);
 	        }
 	        /* Set currently selected tab */
+	   
+	        boolean isDark = savedInstanceState.getBoolean("DarkBkg", true);
+	        if(isDark){
+	    		view.setBackgroundColor(Color.WHITE);
+	        }
+	        else
+	        {
+	        	view.setBackgroundColor(Color.RED);
+	        }
+
 	    }
 	    
+
+       /* else{
+        	
+        	view.setBackgroundColor(Color.RED);
+        }*/
 		return view;
 	}
 
@@ -237,6 +308,7 @@ public class FragmentTab3b extends SherlockFragment {
 		Log.d("visszaallit", ""+pos);
 		outState.putInt("CurrentTab", pos);
 		outState.putString("Selected", selected);
+		outState.putBoolean("DarkBkg", darkbkg);
 		Log.d("vissza", "vissza");
 		setUserVisibleHint(true);
 	}
@@ -322,13 +394,32 @@ public void onResume(){
 	
 }
 
-public void teszt(){
-	Log.d("kak", "kaki");
-}
 
 public void setPos(int ind) {
 	// TODO Auto-generated method stub
 	pos = ind;
+}
+
+/*
+
+public void onPrepareOptionsMenu(Menu menu) {
+    
+/*    if(){      
+    menu.findItem(R.id.settings_btn).setVisible(true);
+
+    }
+    else{*/            
+  //  menu.findItem(R.id.settings_btn).setVisible(false);
+  //  }
+	
+//}
+
+
+@Override
+public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    // TODO Add your menu entries here
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.main, menu);
 }
 
 }

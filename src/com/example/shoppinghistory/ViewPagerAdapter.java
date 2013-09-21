@@ -52,5 +52,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         // TODO Auto-generated method stub
         return PAGE_COUNT;
     }
+
+   
  
 }

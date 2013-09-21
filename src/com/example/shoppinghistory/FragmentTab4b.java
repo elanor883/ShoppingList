@@ -16,6 +16,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.androidplot.pie.PieChart;
@@ -37,6 +38,9 @@ public class FragmentTab4b extends SherlockFragment {
 	    private Segment s3;
 	    private Segment s4;
 	    
+		SherlockFragmentActivity parent;
+		View view;
+	    
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
 		return super.getSherlockActivity();
@@ -45,14 +49,54 @@ public class FragmentTab4b extends SherlockFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		
 	}
 
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+
+		if (isVisibleToUser) {
+			parent = getSherlockActivity();
+
+			if (parent instanceof MainActivity && ((MainActivity) parent).dark_bkg == false) {
+				((MainActivity) parent).activePage = 4;
+				view.setBackgroundColor(Color.WHITE);
+				
+			}
+		} else {
+			Log.d("fr1vis", "fos");
+		}
+
+	}
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab1.xml
-		View view = inflater.inflate(R.layout.stat, container, false);
+		view = inflater.inflate(R.layout.stat, container, false);
 
+		boolean dark_bkg = true;
+		SherlockFragmentActivity parent = getSherlockActivity();
+
+		if (parent instanceof MainActivity) {
+			dark_bkg = ((MainActivity) parent).dark_bkg;
+			Log.d("Fragment2", ""+dark_bkg);
+		}
+
+		if (!dark_bkg) {
+			view.setBackgroundColor(Color.WHITE);
+
+		} else {
+			view.setBackgroundColor(Color.BLACK);
+		}
+		
+		setHasOptionsMenu(false);
 		XYPlot mySimpleXYPlot = (XYPlot) view.findViewById(R.id.mySimpleXYPlot);
 
 

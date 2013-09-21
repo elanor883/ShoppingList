@@ -10,9 +10,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +28,9 @@ import android.widget.Spinner;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class FragmentTab1 extends SherlockFragment {
 
@@ -40,15 +42,14 @@ public class FragmentTab1 extends SherlockFragment {
 	static final String KEY_CORNER = "corner";
 	ArrayList<HashMap<String, String>> itemList = new ArrayList<HashMap<String, String>>();
 	Button dd;
-	private View selected_item = null;
-	private int offset_x = 0;
-	private int offset_y = 0;
 	int year;
 	int month;
 	int day;
 	String cat;
 	String date;
 	int price;
+	SherlockFragmentActivity parent;
+	View mView;
 
 	private static final int MY_DATE_DIALOG_ID = 3;
 
@@ -60,32 +61,59 @@ public class FragmentTab1 extends SherlockFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+
+		if (isVisibleToUser) {
+			parent = getSherlockActivity();
+
+			if (parent instanceof MainActivity && ((MainActivity) parent).dark_bkg == false) {
+				((MainActivity) parent).activePage = 1;
+				mView.setBackgroundColor(Color.WHITE);
+			}
+		} else {
+			Log.d("fr1vis", "fos");
+		}
+
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab2.xml
-		final View view = inflater.inflate(R.layout.fragmenttab1, container,
+		mView = inflater.inflate(R.layout.fragmenttab1, container,
 				false);
 
 		boolean dark_bkg = true;
-		SherlockFragmentActivity parent = getSherlockActivity();
-
+		parent = getSherlockActivity();
+		setHasOptionsMenu(true);
+		
+		
 		if (parent instanceof MainActivity) {
 			dark_bkg = ((MainActivity) parent).dark_bkg;
 		}
 
 		if (!dark_bkg) {
-			view.setBackgroundColor(Color.WHITE);
+			mView.setBackgroundColor(Color.WHITE);
 
 		} else {
-			view.setBackgroundColor(Color.BLACK);
+			mView.setBackgroundColor(Color.BLACK);
 		}
+
 		// ViewGroup vg = (ViewGroup)findViewById(R.id.vg);
 
-		dd = (Button) view.findViewById(R.id.add_item_button);
-		final ListView lv = (ListView) view.findViewById(R.id.listitem_lv);
+		dd = (Button) mView.findViewById(R.id.add_item_button);
+		final ListView lv = (ListView) mView.findViewById(R.id.listitem_lv);
 
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
 		List<ShopList> clist = db.getLastFewItems();
@@ -215,7 +243,7 @@ public class FragmentTab1 extends SherlockFragment {
 			}
 		});
 
-		return view;
+		return mView;
 	}
 
 	@Override
@@ -223,7 +251,150 @@ public class FragmentTab1 extends SherlockFragment {
 		super.onSaveInstanceState(outState);
 		setUserVisibleHint(true);
 	}
+
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.imp_exp_btn:
+			// write your code here
+		
+			return true;
+
+		case R.id.settings_btn:
+			
+			//dark_bkg = false;
+			
+			return true;
+
+		default:
+			break;
+
+		}
+		return true;
+	}
 	
+	
+	
+	/*
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.settings_btn:
+			// write your code here
+			
+			 // db = new DatabaseHandler(this); db.exportDB(); db.close();
+			 
+			Log.d("MainActivity", "import");
+			parent = getSherlockActivity();
+
+			if (parent instanceof MainActivity) {
+				((MainActivity) parent).dark_bkg = false;
+				
+			}
+
+			refreshFragments();
+
+			return true;
 
 
+		default:
+			break;
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
+*/
+
+
+	public void refreshFragments() {
+
+		FragmentTab1 fragment_1 = (FragmentTab1) getFragmentManager()
+				.findFragmentById(R.id.fragment1_container);
+		FragmentTab2 fragment_2 = (FragmentTab2) getFragmentManager()
+				.findFragmentById(R.id.fragment2_container);
+		FragmentTab3b fragment_3 = (FragmentTab3b) getFragmentManager()
+				.findFragmentById(R.id.fragment3_container);
+		FragmentTab4b fragment_4 = (FragmentTab4b) getFragmentManager()
+				.findFragmentById(R.id.fragment4_container);
+
+		FragmentTab1 fragment1 = new FragmentTab1();
+		FragmentTab2 fragment2 = new FragmentTab2();
+		 FragmentTab3b fragment3 = new FragmentTab3b();
+		FragmentTab4b fragment4 = new FragmentTab4b();
+
+		FragmentTransaction transaction = getFragmentManager()
+				.beginTransaction();
+		/*
+		 * if(fragment_1 != null) { Log.d("Main", "fragment1 nem null"); } else
+		 * { FragmentTab1 fragment1 = new FragmentTab1();
+		 * 
+		 * transaction.replace(R.id.fragment1_container, fragment1);
+		 * 
+		 * Log.d("Main", "frag1 is null"); }
+		 * 
+		 * 
+		 * if(fragment_2 != null) { Log.d("Main", "fragment2 nem null"); } else
+		 * { FragmentTab2 fragment2 = new FragmentTab2();
+		 * 
+		 * transaction.replace(R.id.fragment2_container, fragment2);
+		 * Log.d("Main", "frag2 is null"); } if(fragment_3 != null) {
+		 * Log.d("Main", "fragment3 nem null"); } else { FragmentTab3b fragment3
+		 * = new FragmentTab3b();
+		 * 
+		 * transaction.replace(R.id.fragment3_container, fragment3);
+		 * Log.d("Main", "frag3 is null"); }
+		 * 
+		 * if(fragment_4 != null) { Log.d("Main", "fragment4 nem null"); } else
+		 * { FragmentTab4b fragment4 = new FragmentTab4b();
+		 * 
+		 * transaction.replace(R.id.fragment4_container, fragment4);
+		 * Log.d("Main", "frag3 is null"); }
+		 */
+		// fragment1.setArguments(args);
+
+		// FragmentTransaction transaction =
+		// getSupportFragmentManager().beginTransaction();
+
+	/*	Log.d("active", ""+activePage);
+		if (activePage == 1) {*/
+			transaction.replace(R.id.fragment1_container, fragment1);
+			transaction.replace(R.id.fragment2_container, fragment2);
+			//transaction.replace(R.id.fragment4_container, fragment4);
+/*		}
+		
+		else if (activePage == 2) {
+			transaction.replace(R.id.fragment1_container, fragment1);
+			transaction.replace(R.id.fragment2_container, fragment2);
+		//	transaction.replace(R.id.fragment3_container, fragment3);
+		}
+		
+		else if (activePage == 3) {
+
+			transaction.replace(R.id.fragment2_container, fragment2);
+			transaction.replace(R.id.fragment3_container, fragment3);
+			transaction.replace(R.id.fragment4_container, fragment4);
+		}
+		
+		else if (activePage == 4) {
+			transaction.replace(R.id.fragment3_container, fragment3);
+			transaction.replace(R.id.fragment4_container, fragment4);
+		}
+		// transaction.replace(R.id.fragment3_container, fragment3);
+		// transaction.replace(R.id.fragment4_container, fragment4);
+		// transaction.addToBackStack(null);
+		 * */
+		 
+		transaction.commit();
+
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    // TODO Add your menu entries here
+	    super.onCreateOptionsMenu(menu, inflater);
+	    inflater.inflate(R.menu.main2, menu);
+	}
 }
