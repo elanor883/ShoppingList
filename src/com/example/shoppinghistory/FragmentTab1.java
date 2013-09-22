@@ -50,6 +50,9 @@ public class FragmentTab1 extends SherlockFragment {
 	int price;
 	SherlockFragmentActivity parent;
 	View mView;
+	ShopListViewAdapter mAdapterList;
+	ListView lv;
+	
 
 	private static final int MY_DATE_DIALOG_ID = 3;
 
@@ -71,10 +74,25 @@ public class FragmentTab1 extends SherlockFragment {
 		if (isVisibleToUser) {
 			parent = getSherlockActivity();
 
-			if (parent instanceof MainActivity && ((MainActivity) parent).dark_bkg == false) {
-				((MainActivity) parent).activePage = 1;
+			if (MainActivity.dark_bkg == false && mView!= null) {
+			//	((MainActivity) parent).activePage = 1;
 				mView.setBackgroundColor(Color.WHITE);
 			}
+			else if(MainActivity.dark_bkg == true && mView!= null)
+			{
+				mView.setBackgroundColor(Color.BLACK);
+			}
+			//itemList.clear();
+			//mAdapterList.notifyDataSetChanged();
+			
+			if (mAdapterList != null) {
+				mAdapterList.notifyDataSetChanged();
+			}
+
+			else {
+				Log.d("fr1", "kva anyjat enek a szarnak");
+			}
+			
 		} else {
 			Log.d("fr1vis", "fos");
 		}
@@ -94,7 +112,8 @@ public class FragmentTab1 extends SherlockFragment {
 		mView = inflater.inflate(R.layout.fragmenttab1, container,
 				false);
 
-		boolean dark_bkg = true;
+		setHasOptionsMenu(true);
+	/*	boolean dark_bkg = true;
 		parent = getSherlockActivity();
 		setHasOptionsMenu(true);
 		
@@ -109,11 +128,11 @@ public class FragmentTab1 extends SherlockFragment {
 		} else {
 			mView.setBackgroundColor(Color.BLACK);
 		}
-
+*/
 		// ViewGroup vg = (ViewGroup)findViewById(R.id.vg);
 
 		dd = (Button) mView.findViewById(R.id.add_item_button);
-		final ListView lv = (ListView) mView.findViewById(R.id.listitem_lv);
+		lv = (ListView) mView.findViewById(R.id.listitem_lv);
 
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
 		List<ShopList> clist = db.getLastFewItems();
@@ -138,9 +157,9 @@ public class FragmentTab1 extends SherlockFragment {
 
 		// lv.setAdapter(adapter);
 
-		final ShopListViewAdapter adapterList = new ShopListViewAdapter(
+		mAdapterList = new ShopListViewAdapter(
 				getActivity(), itemList);
-		lv.setAdapter(adapterList);
+		lv.setAdapter(mAdapterList);
 
 		dd.setOnClickListener(new OnClickListener() {
 
@@ -232,7 +251,7 @@ public class FragmentTab1 extends SherlockFragment {
 							map.put(KEY_CORNER, "" + price + " ˆ");
 							itemList.add(map);
 							// lv.setAdapter(adapter);
-							adapterList.notifyDataSetChanged();
+							mAdapterList.notifyDataSetChanged();
 
 							dialog.dismiss();
 						}
@@ -258,13 +277,13 @@ public class FragmentTab1 extends SherlockFragment {
 
 		case R.id.imp_exp_btn:
 			// write your code here
-		
+			Log.d("fr1", "imp");
 			return true;
 
 		case R.id.settings_btn:
 			
 			//dark_bkg = false;
-			
+			Log.d("fr1", "set");
 			return true;
 
 		default:
@@ -308,93 +327,93 @@ public class FragmentTab1 extends SherlockFragment {
 	}
 */
 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.settings_btn:
+			// write your code here
+
+			// db = new DatabaseHandler(this); db.exportDB(); db.close();
+
+			Log.d("fr1", "import");
+		
+			
+			if(MainActivity.dark_bkg==true)
+			{
+				MainActivity.dark_bkg = false;
+				mView.setBackgroundColor(Color.WHITE);
+			}
+			else
+			{
+				MainActivity.dark_bkg = true;
+				mView.setBackgroundColor(Color.BLACK);
+			}
+			//itemList.clear();
+			
+			mAdapterList.notifyDataSetChanged();
+			
+			// setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+			//refreshFragments();
+			// recreate();
+			// setContentView(R.layout.activity_main);
+			//dark_bkg = false;
+
+			return true;
+
+		default:
+			break;
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	public void refreshFragments() {
-
-		FragmentTab1 fragment_1 = (FragmentTab1) getFragmentManager()
-				.findFragmentById(R.id.fragment1_container);
-		FragmentTab2 fragment_2 = (FragmentTab2) getFragmentManager()
-				.findFragmentById(R.id.fragment2_container);
-		FragmentTab3b fragment_3 = (FragmentTab3b) getFragmentManager()
-				.findFragmentById(R.id.fragment3_container);
-		FragmentTab4b fragment_4 = (FragmentTab4b) getFragmentManager()
-				.findFragmentById(R.id.fragment4_container);
-
+Log.d("fra1", "vmi szar tortnet");
+		
 		FragmentTab1 fragment1 = new FragmentTab1();
 		FragmentTab2 fragment2 = new FragmentTab2();
-		 FragmentTab3b fragment3 = new FragmentTab3b();
+		FragmentTab3b fragment3 = new FragmentTab3b();
+		FragmentTab3b2 fragment32 = new FragmentTab3b2();
 		FragmentTab4b fragment4 = new FragmentTab4b();
 
 		FragmentTransaction transaction = getFragmentManager()
 				.beginTransaction();
+
+		//if (activePage == 0) {
+			//transaction.replace(R.id.fragment1_container, fragment1);
+
+			//fragment2.not();
 		/*
-		 * if(fragment_1 != null) { Log.d("Main", "fragment1 nem null"); } else
-		 * { FragmentTab1 fragment1 = new FragmentTab1();
-		 * 
+		 * else if (activePage == 2) {
 		 * transaction.replace(R.id.fragment1_container, fragment1);
+		 * transaction.replace(R.id.fragment2_container, fragment2); //
+		 * transaction.replace(R.id.fragment3_container, fragment3); }
 		 * 
-		 * Log.d("Main", "frag1 is null"); }
-		 * 
-		 * 
-		 * if(fragment_2 != null) { Log.d("Main", "fragment2 nem null"); } else
-		 * { FragmentTab2 fragment2 = new FragmentTab2();
+		 * else if (activePage == 3) {
 		 * 
 		 * transaction.replace(R.id.fragment2_container, fragment2);
-		 * Log.d("Main", "frag2 is null"); } if(fragment_3 != null) {
-		 * Log.d("Main", "fragment3 nem null"); } else { FragmentTab3b fragment3
-		 * = new FragmentTab3b();
-		 * 
 		 * transaction.replace(R.id.fragment3_container, fragment3);
-		 * Log.d("Main", "frag3 is null"); }
+		 * transaction.replace(R.id.fragment4_container, fragment4); }
 		 * 
-		 * if(fragment_4 != null) { Log.d("Main", "fragment4 nem null"); } else
-		 * { FragmentTab4b fragment4 = new FragmentTab4b();
-		 * 
-		 * transaction.replace(R.id.fragment4_container, fragment4);
-		 * Log.d("Main", "frag3 is null"); }
+		 * else if (activePage == 4) {
+		 * transaction.replace(R.id.fragment3_container, fragment3);
+		 * transaction.replace(R.id.fragment4_container, fragment4); } //
+		 * transaction.replace(R.id.fragment3_container, fragment3); //
+		 * transaction.replace(R.id.fragment4_container, fragment4); //
+		 * transaction.addToBackStack(null);
 		 */
-		// fragment1.setArguments(args);
 
-		// FragmentTransaction transaction =
-		// getSupportFragmentManager().beginTransaction();
-
-	/*	Log.d("active", ""+activePage);
-		if (activePage == 1) {*/
-			transaction.replace(R.id.fragment1_container, fragment1);
-			transaction.replace(R.id.fragment2_container, fragment2);
-			//transaction.replace(R.id.fragment4_container, fragment4);
-/*		}
-		
-		else if (activePage == 2) {
-			transaction.replace(R.id.fragment1_container, fragment1);
-			transaction.replace(R.id.fragment2_container, fragment2);
-		//	transaction.replace(R.id.fragment3_container, fragment3);
-		}
-		
-		else if (activePage == 3) {
-
-			transaction.replace(R.id.fragment2_container, fragment2);
-			transaction.replace(R.id.fragment3_container, fragment3);
-			transaction.replace(R.id.fragment4_container, fragment4);
-		}
-		
-		else if (activePage == 4) {
-			transaction.replace(R.id.fragment3_container, fragment3);
-			transaction.replace(R.id.fragment4_container, fragment4);
-		}
-		// transaction.replace(R.id.fragment3_container, fragment3);
-		// transaction.replace(R.id.fragment4_container, fragment4);
-		// transaction.addToBackStack(null);
-		 * */
-		 
 		transaction.commit();
 
 	}
-	
+
+
+/*
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	    // TODO Add your menu entries here
 	    super.onCreateOptionsMenu(menu, inflater);
 	    inflater.inflate(R.menu.main2, menu);
-	}
+	}*/
 }

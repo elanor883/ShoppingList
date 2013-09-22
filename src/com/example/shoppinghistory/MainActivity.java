@@ -23,27 +23,24 @@ public class MainActivity extends SherlockFragmentActivity {
 	ActionBar mActionBar;
 	ViewPager mPager;
 	boolean default_theme;
-	boolean dark_bkg = true;
+	static boolean dark_bkg = false;
 	int activePage = 1;
+	ShopListViewAdapter mAdapterList;
 
 	Bundle mSavedInstanceState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		if(!dark_bkg)
-		{
-		setTheme(R.style.Theme_Sherlock_Light);
-		}
+
 
 		setContentView(R.layout.activity_main);
 
-		
 		Log.d("MainActivity", "oncreate");
 		// Activate Navigation Mode Tabs
 		mActionBar = getSupportActionBar();
 		mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
 		default_theme = true;
 		mSavedInstanceState = savedInstanceState;
 
@@ -64,7 +61,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		};
 
 		mPager.setOnPageChangeListener(ViewPagerListener);
-		mPager.setBackgroundColor(Color.WHITE);
+
 		// Locate the adapter class called ViewPagerAdapter.java
 		ViewPagerAdapter viewpageradapter = new ViewPagerAdapter(fm);
 		// Set the View Pager Adapter into ViewPager
@@ -77,7 +74,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
 				// Pass the position on tab click to ViewPager
 				mPager.setCurrentItem(tab.getPosition());
-				activePage=tab.getPosition();
+				activePage = tab.getPosition();
 			}
 
 			@Override
@@ -116,31 +113,28 @@ public class MainActivity extends SherlockFragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
+
 	}
-	
 
-	
-
-	public boolean onOptionsItemSelected(MenuItem item) {
+	/*public boolean onOptionsItemSelected(MenuItem item) {
 		DatabaseHandler db;
 		switch (item.getItemId()) {
 
 		case R.id.imp_exp_btn:
 			// write your code here
-			
-			 // db = new DatabaseHandler(this); db.exportDB(); db.close();
-			 
+
+			// db = new DatabaseHandler(this); db.exportDB(); db.close();
+
 			Log.d("MainActivity", "import");
 
-			//setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
-			refreshFragments();
-			//recreate();
-			//setContentView(R.layout.activity_main);
-		dark_bkg = false;
-
+			// setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+			//refreshFragments();
+			// recreate();
+			// setContentView(R.layout.activity_main);
+			dark_bkg = false;
+//mAdapterList.notifyDataSetChanged();
 			return true;
-
 
 		default:
 			break;
@@ -148,63 +142,75 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+/*
 	public void refreshFragments() {
 
 		FragmentTab1 fragment1 = new FragmentTab1();
 		FragmentTab2 fragment2 = new FragmentTab2();
-		 FragmentTab3b fragment3 = new FragmentTab3b();
+		FragmentTab3b fragment3 = new FragmentTab3b();
+		FragmentTab3b2 fragment32 = new FragmentTab3b2();
 		FragmentTab4b fragment4 = new FragmentTab4b();
 
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-	
+		FragmentTransaction transaction = getSupportFragmentManager()
+				.beginTransaction();
+
+		fragment3.setMenuVisibility(false);
 		if (activePage == 0) {
 			transaction.replace(R.id.fragment1_container, fragment1);
-			
-		}
-		Log.d("main", ""+activePage);
-/*		
-		else if (activePage == 2) {
-			transaction.replace(R.id.fragment1_container, fragment1);
-			transaction.replace(R.id.fragment2_container, fragment2);
-		//	transaction.replace(R.id.fragment3_container, fragment3);
-		}
-		
-		else if (activePage == 3) {
 
+		}
+		if (activePage == 1) {
 			transaction.replace(R.id.fragment2_container, fragment2);
-			transaction.replace(R.id.fragment3_container, fragment3);
-			transaction.replace(R.id.fragment4_container, fragment4);
-		}
-		
-		else if (activePage == 4) {
-			transaction.replace(R.id.fragment3_container, fragment3);
-			transaction.replace(R.id.fragment4_container, fragment4);
-		}
-		// transaction.replace(R.id.fragment3_container, fragment3);
-		// transaction.replace(R.id.fragment4_container, fragment4);
-		// transaction.addToBackStack(null);
-		 * */
-		 
-		transaction.commit();
 
-	}
+		}
+		if (activePage == 2) {
+			//transaction.replace(R.id.fragment32_container, fragment3);
+			//fragment3.view.setBackgroundColor(Color.WHITE);
+			//transaction.replace(R.id.fragment32_detail, fragment32);
+			//transaction.hide(fragment32);
+			// transaction.replace(R.id.fragment32_detail, fragment32);
+			//fragment3.onResume();
+			transaction.remove (fragment3);
+			transaction.add (R.id.fragment32_container, fragment3);
+
+		}
+		if (activePage == 3) {
+			transaction.replace(R.id.scrollView1, fragment4);
+
+		}
+
+		if (activePage == 4) {
+			transaction.replace(R.id.fragment32_detail, fragment32);
+
+		}
+		Log.d("main", "" + activePage);
+		/*
+		 * else if (activePage == 2) {
+		 * transaction.replace(R.id.fragment1_container, fragment1);
+		 * transaction.replace(R.id.fragment2_container, fragment2); //
+		 * transaction.replace(R.id.fragment3_container, fragment3); }
+		 * 
+		 * else if (activePage == 3) {
+		 * 
+		 * transaction.replace(R.id.fragment2_container, fragment2);
+		 * transaction.replace(R.id.fragment3_container, fragment3);
+		 * transaction.replace(R.id.fragment4_container, fragment4); }
+		 * 
+		 * else if (activePage == 4) {
+		 * transaction.replace(R.id.fragment3_container, fragment3);
+		 * transaction.replace(R.id.fragment4_container, fragment4); } //
+		 * transaction.replace(R.id.fragment3_container, fragment3); //
+		 * transaction.replace(R.id.fragment4_container, fragment4); //
+		 * transaction.addToBackStack(null);
+		 */
+
+	//	transaction.commit();
+
 	
-	
-/*
-	@Override
-    public void recreate()
-    {
-        if (android.os.Build.VERSION.SDK_INT >= 11)
-        {
-            super.recreate();
-        }
-        else
-        {
-        	dark_bkg = false;
-            startActivity(getIntent());
-           // finish();
-        }
-    }
-    */
+
+	/*
+	 * @Override public void recreate() { if (android.os.Build.VERSION.SDK_INT
+	 * >= 11) { super.recreate(); } else { dark_bkg = false;
+	 * startActivity(getIntent()); // finish(); } }
+	 */
 }

@@ -5,9 +5,12 @@ import java.util.HashMap;
 
 
  
+
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,6 +68,20 @@ public class LabelListAdapter extends BaseAdapter {
        // int id = vi.getResources().getIdentifier(mylist.get(FragmentTab2.KEY_COLOR), null, null);
     // Log.d("res id", ""+id);
         // imageLoader.DisplayImage(song.get(CustomizedListView.KEY_THUMB_URL), thumb_image);
+        
+
+		if (MainActivity.dark_bkg  == true) {
+			vi.setBackgroundColor(Color.BLACK);
+			//duration.setTextColor(Color.parseColor("#30b4e0"));
+			title.setTextColor(Color.WHITE);
+			//artist.setTextColor(Color.WHITE);
+
+		} else {
+			vi.setBackgroundColor(Color.parseColor("#f1f1f2"));
+			//duration.setTextColor(Color.parseColor("#30b4e0"));
+			title.setTextColor(Color.BLACK);
+			//artist.setTextColor(Color.BLACK);
+		}
         return vi;
     }
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class FragmentTab3b2 extends SherlockFragment {
@@ -33,6 +35,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 	static final String KEY_SUBTITLE = "sub";
 	static final String KEY_CORNER = "corner";
 	static final String KEY_IMG = "img";
+	LabelCostListAdapter adapterList;
 	
 	ArrayList<HashMap<String, String>> itemList = new ArrayList<HashMap<String, String>>();
 	Button dd;
@@ -42,6 +45,8 @@ public class FragmentTab3b2 extends SherlockFragment {
 	String cat;
 	String date;
 	int price;
+	View view;
+	static ListView lv;
 
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -57,16 +62,53 @@ public class FragmentTab3b2 extends SherlockFragment {
 	}
 
 	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+
+		if (isVisibleToUser) {
+			/*
+			 * parent = getSherlockActivity();
+			 * 
+			 * if (parent instanceof MainActivity && ((MainActivity)
+			 * parent).dark_bkg == false) { // ((MainActivity)
+			 * parent).activePage = 1; mView.setBackgroundColor(Color.WHITE); }
+			 */
+			// labelList.clear();
+			// adapter.notifyDataSetChanged();
+			
+			if (MainActivity.dark_bkg == false && view != null) {
+				// ((MainActivity) parent).activePage = 1;
+				view.setBackgroundColor(Color.WHITE);
+			} else if (MainActivity.dark_bkg == true && view != null) {
+				view.setBackgroundColor(Color.BLACK);
+			}
+			
+			if (adapterList != null) {
+				adapterList.notifyDataSetChanged();
+			}
+
+			else {
+				Log.d("fr2", "kva anyjat enek a szarnak");
+			}
+
+		} else {
+			Log.d("fr1vis", "fos");
+		}
+
+	}
+	
+	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab2.xml
-		final View view = inflater.inflate(R.layout.fragmenttab32port,
+		view = inflater.inflate(R.layout.fragmenttab32port,
 				container, false);
 
 		// ViewGroup vg = (ViewGroup)findViewById(R.id.vg);
 
-		final ListView lv = (ListView) view
+		 lv = (ListView) view
 				.findViewById(R.id.listitem_lv_frag32);
+		setHasOptionsMenu(true);
 
 		Calendar c = Calendar.getInstance();
 
@@ -99,7 +141,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 		}
 
 		i = 0;
-		final LabelCostListAdapter adapterList = new LabelCostListAdapter(
+		adapterList = new LabelCostListAdapter(
 				getActivity(), itemList);
 		lv.setAdapter(adapterList);
 
@@ -131,7 +173,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 		        Log.d("mukodik ez a szar?", "ja, megnyomtad");
 		    	FragmentTab3b.pos = -1;
 		        FragmentTab3b fr3 = new FragmentTab3b();
-		    	
+		      //  ((ShopListViewAdapter)(FragmentTab3b.lv.getAdapter())).notifyDataSetChanged();
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
 				ft.replace(R.id.detail32, fr3);
 				
@@ -157,5 +199,42 @@ public class FragmentTab3b2 extends SherlockFragment {
 	public void onBackPressed() {
        Log.d("kocsog", "kocsog");
 	    
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.settings_btn:
+			// write your code here
+
+			// db = new DatabaseHandler(this); db.exportDB(); db.close();
+
+			Log.d("fr1", "import");
+		
+			
+			if(MainActivity.dark_bkg==true)
+			{
+				MainActivity.dark_bkg = false;
+				view.setBackgroundColor(Color.WHITE);
+				
+			}
+			else
+			{
+				MainActivity.dark_bkg = true;
+				view.setBackgroundColor(Color.BLACK);
+			}
+			//itemList.clear();
+			
+			adapterList.notifyDataSetChanged();
+
+
+			return true;
+
+		default:
+			break;
+
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

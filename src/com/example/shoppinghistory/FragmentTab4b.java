@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
@@ -57,13 +58,24 @@ public class FragmentTab4b extends SherlockFragment {
 		super.setUserVisibleHint(isVisibleToUser);
 
 		if (isVisibleToUser) {
-			parent = getSherlockActivity();
-
-			if (parent instanceof MainActivity && ((MainActivity) parent).dark_bkg == false) {
-				((MainActivity) parent).activePage = 4;
+			/*
+			 * parent = getSherlockActivity();
+			 * 
+			 * if (parent instanceof MainActivity && ((MainActivity)
+			 * parent).dark_bkg == false) { // ((MainActivity)
+			 * parent).activePage = 1; mView.setBackgroundColor(Color.WHITE); }
+			 */
+			// labelList.clear();
+			// adapter.notifyDataSetChanged();
+			
+			if (MainActivity.dark_bkg == false && view != null) {
+				// ((MainActivity) parent).activePage = 1;
 				view.setBackgroundColor(Color.WHITE);
-				
+			} else if (MainActivity.dark_bkg == true && view != null) {
+				view.setBackgroundColor(Color.BLACK);
 			}
+			
+
 		} else {
 			Log.d("fr1vis", "fos");
 		}
@@ -96,7 +108,7 @@ public class FragmentTab4b extends SherlockFragment {
 			view.setBackgroundColor(Color.BLACK);
 		}
 		
-		setHasOptionsMenu(false);
+		setHasOptionsMenu(true);
 		XYPlot mySimpleXYPlot = (XYPlot) view.findViewById(R.id.mySimpleXYPlot);
 
 
@@ -223,4 +235,37 @@ public class FragmentTab4b extends SherlockFragment {
 		setUserVisibleHint(true);
 	}
 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.settings_btn:
+			// write your code here
+
+			// db = new DatabaseHandler(this); db.exportDB(); db.close();
+
+			Log.d("fr1", "import");
+		
+			
+			if(MainActivity.dark_bkg==true)
+			{
+				MainActivity.dark_bkg = false;
+				view.setBackgroundColor(Color.WHITE);
+				
+			}
+			else
+			{
+				MainActivity.dark_bkg = true;
+				view.setBackgroundColor(Color.BLACK);
+			}
+			
+
+			return true;
+
+		default:
+			break;
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }

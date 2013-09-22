@@ -44,14 +44,14 @@ public class FragmentTab3b extends SherlockFragment {
 	static int pos;
 	boolean darkbkg = true;
 	LinearLayout l1, l2;
-	
+
 	LayoutInflater mInflater;
 	ViewGroup mContainer;
 	Bundle mSavedInstanceState;
 	View view;
 	SherlockFragmentActivity parent;
+	ShopListViewAdapter adapter;
 
-	
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
 		return super.getSherlockActivity();
@@ -62,30 +62,46 @@ public class FragmentTab3b extends SherlockFragment {
 		super.setUserVisibleHint(isVisibleToUser);
 
 		if (isVisibleToUser) {
-			parent = getSherlockActivity();
+			/*
+			 * parent = getSherlockActivity();
+			 * 
+			 * if (parent instanceof MainActivity && ((MainActivity)
+			 * parent).dark_bkg == false) { // ((MainActivity)
+			 * parent).activePage = 1; mView.setBackgroundColor(Color.WHITE); }
+			 */
+			// itemList.clear();
+			// mAdapterList.notifyDataSetChanged();
 
-			if (parent instanceof MainActivity && ((MainActivity) parent).dark_bkg == false) {
-				((MainActivity) parent).activePage = 3;
+			if (MainActivity.dark_bkg == false && view != null) {
+				// ((MainActivity) parent).activePage = 1;
 				view.setBackgroundColor(Color.WHITE);
-				;
+			} else if (MainActivity.dark_bkg == true && view != null) {
+				view.setBackgroundColor(Color.BLACK);
 			}
+
+			if (adapter != null) {
+				adapter.notifyDataSetChanged();
+			}
+
+			else {
+				Log.d("fr1", "kva anyjat enek a szarnak");
+			}
+
 		} else {
 			Log.d("fr1vis", "fos");
 		}
 
 	}
+
 	@Override
-	public void onStart(){
+	public void onStart() {
 		super.onStart();
 	}
-	
+
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		
-		super.onViewCreated(view, savedInstanceState);
-		
 
-		
+		super.onViewCreated(view, savedInstanceState);
 
 	}
 
@@ -98,55 +114,51 @@ public class FragmentTab3b extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Get the view from fragmenttab2.xml
-		
+
 		view = inflater.inflate(R.layout.fragmenttab32, container, false);
 
 		boolean dark_bkg = true;
 		SherlockFragmentActivity parent = getSherlockActivity();
-		
 
 		if (parent instanceof MainActivity) {
 			dark_bkg = ((MainActivity) parent).dark_bkg;
 		}
 
-		if (!dark_bkg) {
-			view.setBackgroundColor(Color.WHITE);
+		/*
+		 * if (!dark_bkg) { view.setBackgroundColor(Color.WHITE);
+		 * 
+		 * } else { view.setBackgroundColor(Color.BLACK); }
+		 */
 
-		} else {
-			view.setBackgroundColor(Color.BLACK);
-		}
-		
+		setHasOptionsMenu(true);
 
-		setHasOptionsMenu(false);
-		
 		Log.d("vissza", "vissza2");
-		
+
 		mInflater = inflater;
 		mContainer = container;
 		mSavedInstanceState = savedInstanceState;
-		
-		//setHasOptionsMenu(true);
-		
+
 		pos = -1;
-		
+
 		lv = (ListView) view.findViewById(R.id.listView1);
 		l1 = (LinearLayout) view.findViewById(R.id.mainlay);
 		l2 = (LinearLayout) view.findViewById(R.id.sublay);
 
-		if(!isLandscape())
-		{
+		if (!isLandscape()) {
 			Log.d("oncreate", "ujra meghivodot");
-			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			p1.weight = 1;
-					
+
 			l1.setLayoutParams(p1);
-			
-			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			p2.weight = 0;
 			l2.setLayoutParams(p2);
 		}
 		final List<String> dateList = new ArrayList<String>();
-		
+
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
 		// db.addContact(new ShopList("Food", 21, "2013-12-17"));
 		// db.addContact(new ShopList("Party", 8, "2013-07-17" ));
@@ -183,7 +195,7 @@ public class FragmentTab3b extends SherlockFragment {
 			map.put(KEY_CORNER, "" + cn.getPrice() + " ˆ");
 			dateList.add(date);
 			songsList.add(map);
-			
+
 			Log.d("Name: ", log);
 		}
 		ArrayList<String> cat = db.getCategories();
@@ -236,26 +248,24 @@ public class FragmentTab3b extends SherlockFragment {
 		 * ListAdapter lp;
 		 */
 		// songsList.add(map2);
-		final ShopListViewAdapter adapter = new ShopListViewAdapter(getActivity(),
-				songsList);
+		adapter = new ShopListViewAdapter(getActivity(), songsList);
 		lv.setAdapter(adapter);
-		
+
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
-		    public void onItemClick(AdapterView<?> parent, View view, int position,
-		            long id) {
-		       // Toast.makeText(getBaseContext(), mListItems.get(position), 1000).show();
-		    	selected = dateList.get(position);
-		    	Log.d("frag3", selected);
-		    	view.setSelected(true);
-		    	pos = position;
-		    	adapter.setSelectedIndex(position);
-		    	showDetails(position);
-		    }
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// Toast.makeText(getBaseContext(), mListItems.get(position),
+				// 1000).show();
+				selected = dateList.get(position);
+				Log.d("frag3", selected);
+				view.setSelected(true);
+				pos = position;
+				adapter.setSelectedIndex(position);
+				showDetails(position);
+			}
 
 		});
-		
-
 
 		// Click event for single list row
 		/*
@@ -266,49 +276,44 @@ public class FragmentTab3b extends SherlockFragment {
 		 * 
 		 * } });
 		 */
-		
-	    if(savedInstanceState != null) {
-	        int currentTab = savedInstanceState.getInt("CurrentTab", pos);
-	       
-	        
-	        Log.d("current", ""+currentTab);
-	        if(isLandscape() && currentTab != -1){
-		    	selected = dateList.get(currentTab);
-		    	Log.d("frag3", selected);
-		    	view.setSelected(true);
-		    	adapter.setSelectedIndex(currentTab);
-		    	showDetails(currentTab);
-	        }
-	        /* Set currently selected tab */
-	   
-	        boolean isDark = savedInstanceState.getBoolean("DarkBkg", true);
-	        if(isDark){
-	    		view.setBackgroundColor(Color.WHITE);
-	        }
-	        else
-	        {
-	        	view.setBackgroundColor(Color.RED);
-	        }
 
-	    }
-	    
+		if (savedInstanceState != null) {
+			int currentTab = savedInstanceState.getInt("CurrentTab", pos);
 
-       /* else{
-        	
-        	view.setBackgroundColor(Color.RED);
-        }*/
+			Log.d("current", "" + currentTab);
+			if (isLandscape() && currentTab != -1) {
+				selected = dateList.get(currentTab);
+				Log.d("frag3", selected);
+				view.setSelected(true);
+				adapter.setSelectedIndex(currentTab);
+				showDetails(currentTab);
+			}
+			/* Set currently selected tab */
+
+	/*		boolean isDark = savedInstanceState.getBoolean("DarkBkg", true);
+			if (isDark) {
+				view.setBackgroundColor(Color.WHITE);
+			} else {
+				view.setBackgroundColor(Color.RED);
+			}*/
+
+		}
+
+		/*
+		 * else{
+		 * 
+		 * view.setBackgroundColor(Color.RED); }
+		 */
 		return view;
 	}
-
-
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.d("visszaallit", ""+pos);
+		Log.d("visszaallit", "" + pos);
 		outState.putInt("CurrentTab", pos);
 		outState.putString("Selected", selected);
-		outState.putBoolean("DarkBkg", darkbkg);
+		//outState.putBoolean("DarkBkg", darkbkg);
 		Log.d("vissza", "vissza");
 		setUserVisibleHint(true);
 	}
@@ -337,89 +342,115 @@ public class FragmentTab3b extends SherlockFragment {
 		return weekday;
 
 	}
-	
 
 	public void showDetails(int index) {
-		
+
 		if (isLandscape()) {
-			
-			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			p1.weight = 1;
-					
+
 			l1.setLayoutParams(p1);
-			
-			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			p2.weight = 2;
 			l2.setLayoutParams(p2);
-			
+
 			FragmentTab3b2 aFrag = new FragmentTab3b2();
 			getFragmentManager().beginTransaction()
-			        .replace(R.id.detail32, aFrag).commit();
-			
-		}
-		else {
-			
-			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+					.replace(R.id.detail32, aFrag).commit();
+
+		} else {
+
+			LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			p1.weight = 0;
-					
+
 			l1.setLayoutParams(p1);
-			
-			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+			LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			p2.weight = 1;
 			l2.setLayoutParams(p2);
-			
-		
+
 			FragmentTab3b2 aFrag = new FragmentTab3b2();
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			ft.replace(R.id.detail32, aFrag);
-			//ft.addToBackStack(null);
+			// ft.addToBackStack(null);
 			ft.commit();
-			
+
 		}
-		/*else {
+		/*
+		 * else {
+		 * 
+		 * Intent intent = new Intent(); intent.setClass(this,
+		 * DetailsActivity.class); intent.putExtra("index", index);
+		 * startActivity(intent); }
+		 */
 
-		Intent intent = new Intent();
-		intent.setClass(this, DetailsActivity.class);
-		intent.putExtra("index", index);
-		startActivity(intent);
-		}*/
-		
 	}
-	
+
+	public void onResume() {
+		super.onResume();
+
+	}
+
+	public void setPos(int ind) {
+		// TODO Auto-generated method stub
+		pos = ind;
+	}
+
+	/*
+	 * 
+	 * public void onPrepareOptionsMenu(Menu menu) {
+	 * 
+	 * /* if(){ menu.findItem(R.id.settings_btn).setVisible(true);
+	 * 
+	 * } else{
+	 */
+	// menu.findItem(R.id.settings_btn).setVisible(false);
+	// }
+
+	// }
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		DatabaseHandler db;
+		switch (item.getItemId()) {
+
+		case R.id.settings_btn:
+			// write your code here
+
+			// db = new DatabaseHandler(this); db.exportDB(); db.close();
+
+			Log.d("fr1", "import");
+
+			if (MainActivity.dark_bkg == true) {
+				MainActivity.dark_bkg = false;
+				view.setBackgroundColor(Color.WHITE);
+				l1.setBackgroundColor(Color.WHITE);
+				l1.setBackgroundColor(Color.WHITE);
+			} else {
+				MainActivity.dark_bkg = true;
+				view.setBackgroundColor(Color.BLACK);
+				l1.setBackgroundColor(Color.BLACK);
+				l1.setBackgroundColor(Color.BLACK);
+			}
+			// itemList.clear();
+
+			//((LabelCostListAdapter)(FragmentTab3b2.lv.getAdapter())).notifyDataSetChanged();
+			
+			adapter.notifyDataSetChanged();
+			return true;
+
+		default:
+			break;
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 
 	
-public void onResume(){
-	super.onResume();
-	
-	
-}
-
-
-public void setPos(int ind) {
-	// TODO Auto-generated method stub
-	pos = ind;
-}
-
-/*
-
-public void onPrepareOptionsMenu(Menu menu) {
-    
-/*    if(){      
-    menu.findItem(R.id.settings_btn).setVisible(true);
-
-    }
-    else{*/            
-  //  menu.findItem(R.id.settings_btn).setVisible(false);
-  //  }
-	
-//}
-
-
-@Override
-public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    // TODO Add your menu entries here
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.main, menu);
-}
-
 }
