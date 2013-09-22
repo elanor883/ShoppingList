@@ -23,6 +23,7 @@ import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -51,7 +52,9 @@ public class FragmentTab3b extends SherlockFragment {
 	View view;
 	SherlockFragmentActivity parent;
 	ShopListViewAdapter adapter;
-
+	FrameLayout fr32;
+	boolean isDetailActive = false;
+	
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
 		return super.getSherlockActivity();
@@ -117,6 +120,7 @@ public class FragmentTab3b extends SherlockFragment {
 
 		view = inflater.inflate(R.layout.fragmenttab32, container, false);
 
+		fr32 = (FrameLayout)view.findViewById(R.id.detail32);
 		boolean dark_bkg = true;
 		SherlockFragmentActivity parent = getSherlockActivity();
 
@@ -262,6 +266,7 @@ public class FragmentTab3b extends SherlockFragment {
 				view.setSelected(true);
 				pos = position;
 				adapter.setSelectedIndex(position);
+				isDetailActive = true;
 				showDetails(position);
 			}
 
@@ -361,6 +366,7 @@ public class FragmentTab3b extends SherlockFragment {
 			FragmentTab3b2 aFrag = new FragmentTab3b2();
 			getFragmentManager().beginTransaction()
 					.replace(R.id.detail32, aFrag).commit();
+			
 
 		} else {
 
@@ -424,21 +430,30 @@ public class FragmentTab3b extends SherlockFragment {
 
 			// db = new DatabaseHandler(this); db.exportDB(); db.close();
 
-			Log.d("fr1", "import");
+			Log.d("fr3b", "import");
 
 			if (MainActivity.dark_bkg == true) {
 				MainActivity.dark_bkg = false;
 				view.setBackgroundColor(Color.WHITE);
-				l1.setBackgroundColor(Color.WHITE);
-				l1.setBackgroundColor(Color.WHITE);
+				//l1.setBackgroundColor(Color.WHITE);
+				//l2.setBackgroundColor(Color.WHITE);
 			} else {
 				MainActivity.dark_bkg = true;
 				view.setBackgroundColor(Color.BLACK);
-				l1.setBackgroundColor(Color.BLACK);
-				l1.setBackgroundColor(Color.BLACK);
+				//l1.setBackgroundColor(Color.BLACK);
+				//l2.setBackgroundColor(Color.BLACK);
 			}
 			// itemList.clear();
 
+			if(isDetailActive)
+			{
+				Log.d("fr32222", "detail-settings");
+				FragmentTab3b2 aFrag = new FragmentTab3b2();
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				ft.replace(R.id.detail32, aFrag);
+				// ft.addToBackStack(null);
+				ft.commit();
+			}
 			//((LabelCostListAdapter)(FragmentTab3b2.lv.getAdapter())).notifyDataSetChanged();
 			
 			adapter.notifyDataSetChanged();

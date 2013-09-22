@@ -210,7 +210,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 			// db = new DatabaseHandler(this); db.exportDB(); db.close();
 
-			Log.d("fr1", "import");
+			Log.d("fr3b2", "import");
 		
 			
 			if(MainActivity.dark_bkg==true)
