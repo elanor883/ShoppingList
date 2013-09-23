@@ -274,8 +274,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return shoppinglistList;
 	}
 
-	public List<ShopList> getLastFewItems() {
-		String selectQuery = "select date, price, type_name from shoplist order by date desc limit 5";
+	public List<ShopList> getLastFewItems(int num) {
+		
+		String selectQuery;
+		if(num != 0){
+		selectQuery = "select date, price, type_name from shoplist order by date desc limit "+ num;
+		}
+		else
+		{
+			selectQuery = "select date, price, type_name from shoplist order by date desc";
+		}
 
 		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
 		SQLiteDatabase db = this.getWritableDatabase();

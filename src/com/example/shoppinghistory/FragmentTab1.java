@@ -140,7 +140,7 @@ public class FragmentTab1 extends SherlockFragment {
 
 
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
-		List<ShopList> clist = db.getLastFewItems();
+		List<ShopList> clist = db.getLastFewItems(10);
 		itemList.clear();
 		for (ShopList s : clist) {
 			HashMap<String, String> map = new HashMap<String, String>();
@@ -350,6 +350,21 @@ public class FragmentTab1 extends SherlockFragment {
 			importMenu();
 
 			return true;
+		case R.id.last_10:
+
+			refreshLastFewElements(1);
+
+			return true;
+		case R.id.last_20:
+
+			refreshLastFewElements(20);
+
+			return true;
+		case R.id.all_items:
+
+			refreshLastFewElements(0);
+
+			return true;
 		default:
 			break;
 
@@ -406,15 +421,25 @@ public class FragmentTab1 extends SherlockFragment {
 	 * menu); }
 	 */
 	
+	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
-		//if (isDetailActive) {
-			MenuItem item = menu.findItem(R.id.imp_btn);
-			MenuItem item2 = menu.findItem(R.id.exp_btn);
-			item.setEnabled(true);
-			item.setVisible(true);
-			item2.setEnabled(true);
-			item2.setVisible(true);
-		//}
+
+		MenuItem item = menu.findItem(R.id.imp_btn);
+		MenuItem item2 = menu.findItem(R.id.exp_btn);
+		MenuItem item3 = menu.findItem(R.id.last_10);
+		MenuItem item4 = menu.findItem(R.id.last_20);
+		MenuItem item5 = menu.findItem(R.id.all_items);
+		MenuItem item6 = menu.findItem(R.id.order_daily);
+		MenuItem item7 = menu.findItem(R.id.order_weekly);
+		MenuItem item8 = menu.findItem(R.id.order_monthly);
+		item.setVisible(true);
+		item2.setVisible(true);
+		item3.setVisible(true);
+		item4.setVisible(true);
+		item5.setVisible(true);
+		item6.setVisible(false);
+		item7.setVisible(false);
+		item8.setVisible(false);
 		super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -434,5 +459,28 @@ public class FragmentTab1 extends SherlockFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 Log.d("fr1", "kijeloles");
 	  return true;
+	}
+	
+	public void refreshLastFewElements(int num)
+	{
+		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+		List<ShopList> clist = db.getLastFewItems(num);
+		itemList.clear();
+		for (ShopList s : clist) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			// color =
+			map.put(KEY_TITLE, s.getTypeName());
+			map.put(KEY_SUBTITLE, s.getDate());
+			map.put(KEY_CORNER, "" + s.getPrice() + " ˆ");
+			itemList.add(map);
+		}
+		// adapter.notifyDataSetChanged();
+
+		db.close();
+
+		mAdapterList.notifyDataSetChanged();
+		
+		//refreshCurrentFragment();
+		
 	}
 }

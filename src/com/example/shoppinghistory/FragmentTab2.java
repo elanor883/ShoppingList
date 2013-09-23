@@ -782,20 +782,23 @@ public class FragmentTab2 extends SherlockFragment {
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
-		// if (isDetailActive) {
+
 		MenuItem item = menu.findItem(R.id.imp_btn);
 		MenuItem item2 = menu.findItem(R.id.exp_btn);
 		MenuItem item3 = menu.findItem(R.id.last_10);
 		MenuItem item4 = menu.findItem(R.id.last_20);
-		item.setEnabled(false);
+		MenuItem item5 = menu.findItem(R.id.all_items);
+		MenuItem item6 = menu.findItem(R.id.order_daily);
+		MenuItem item7 = menu.findItem(R.id.order_weekly);
+		MenuItem item8 = menu.findItem(R.id.order_monthly);
 		item.setVisible(false);
-		item2.setEnabled(false);
 		item2.setVisible(false);
-		item3.setEnabled(false);
 		item3.setVisible(false);
-		item4.setEnabled(false);
 		item4.setVisible(false);
-		// }
+		item5.setVisible(false);
+		item6.setVisible(false);
+		item7.setVisible(false);
+		item8.setVisible(false);
 		super.onPrepareOptionsMenu(menu);
 	}
 }
