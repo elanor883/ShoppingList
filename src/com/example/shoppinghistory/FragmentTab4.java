@@ -9,9 +9,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.ArrayAdapter;
  
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
  
 public class FragmentTab4 extends SherlockFragment implements
@@ -77,5 +80,18 @@ public class FragmentTab4 extends SherlockFragment implements
         // TODO Auto-generated method stub
  
     }
+    
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		//if (isDetailActive) {
+			MenuItem item = menu.findItem(R.id.imp_btn);
+			MenuItem item2 = menu.findItem(R.id.exp_btn);
+			item.setEnabled(false);
+			item.setVisible(false);
+			item2.setEnabled(false);
+			item2.setVisible(false);
+		//}
+		super.onPrepareOptionsMenu(menu);
+	}
  
 }

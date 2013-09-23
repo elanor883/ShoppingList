@@ -23,8 +23,8 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-
 
 public class FragmentTab3b2 extends SherlockFragment {
 
@@ -36,7 +36,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 	static final String KEY_CORNER = "corner";
 	static final String KEY_IMG = "img";
 	LabelCostListAdapter adapterList;
-	
+
 	ArrayList<HashMap<String, String>> itemList = new ArrayList<HashMap<String, String>>();
 	Button dd;
 	int year;
@@ -56,9 +56,9 @@ public class FragmentTab3b2 extends SherlockFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		
+
 		Log.d("vissza", "vissza");
-		
+
 	}
 
 	@Override
@@ -66,29 +66,26 @@ public class FragmentTab3b2 extends SherlockFragment {
 		super.setUserVisibleHint(isVisibleToUser);
 
 		if (isVisibleToUser) {
-			/*
-			 * parent = getSherlockActivity();
-			 * 
-			 * if (parent instanceof MainActivity && ((MainActivity)
-			 * parent).dark_bkg == false) { // ((MainActivity)
-			 * parent).activePage = 1; mView.setBackgroundColor(Color.WHITE); }
-			 */
-			// labelList.clear();
-			// adapter.notifyDataSetChanged();
-			
-			if (MainActivity.dark_bkg == false && view != null) {
-				// ((MainActivity) parent).activePage = 1;
-				view.setBackgroundColor(Color.WHITE);
-			} else if (MainActivity.dark_bkg == true && view != null) {
-				view.setBackgroundColor(Color.BLACK);
-			}
-			
-			if (adapterList != null) {
-				adapterList.notifyDataSetChanged();
+
+			if (MainActivity.imported == true) {
+				Log.d("frag3", "imported");
 			}
 
 			else {
-				Log.d("fr2", "kva anyjat enek a szarnak");
+				if (MainActivity.dark_bkg == false && view != null) {
+					// ((MainActivity) parent).activePage = 1;
+					view.setBackgroundColor(Color.WHITE);
+				} else if (MainActivity.dark_bkg == true && view != null) {
+					view.setBackgroundColor(Color.BLACK);
+				}
+
+				if (adapterList != null) {
+					adapterList.notifyDataSetChanged();
+				}
+
+				else {
+					Log.d("fr2", "kva anyjat enek a szarnak");
+				}
 			}
 
 		} else {
@@ -96,19 +93,17 @@ public class FragmentTab3b2 extends SherlockFragment {
 		}
 
 	}
-	
+
 	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(final LayoutInflater inflater,
+			final ViewGroup container, Bundle savedInstanceState) {
 		// Get the view from fragmenttab2.xml
-		view = inflater.inflate(R.layout.fragmenttab32port,
-				container, false);
+		view = inflater.inflate(R.layout.fragmenttab32port, container, false);
 
 		// ViewGroup vg = (ViewGroup)findViewById(R.id.vg);
 
-		 lv = (ListView) view
-				.findViewById(R.id.listitem_lv_frag32);
-		setHasOptionsMenu(true);
+		lv = (ListView) view.findViewById(R.id.listitem_lv_frag32);
+		setHasOptionsMenu(false);
 
 		Calendar c = Calendar.getInstance();
 
@@ -127,7 +122,8 @@ public class FragmentTab3b2 extends SherlockFragment {
 				String date = item.getDate();
 				String type = item.getTypeName();
 				int month = Integer.parseInt(date.substring(5, 7));
-				if (date.equals(FragmentTab3b.selected) && type.equals(type_name)) {
+				if (date.equals(FragmentTab3b.selected)
+						&& type.equals(type_name)) {
 					int price = item.getPrice();
 					int current_price = monthlyCost.get(i).second;
 					monthlyCost.set(i, new Pair<String, Integer>(type_name,
@@ -141,8 +137,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 		}
 
 		i = 0;
-		adapterList = new LabelCostListAdapter(
-				getActivity(), itemList);
+		adapterList = new LabelCostListAdapter(getActivity(), itemList);
 		lv.setAdapter(adapterList);
 
 		db = new DatabaseHandler(getSherlockActivity());
@@ -161,30 +156,28 @@ public class FragmentTab3b2 extends SherlockFragment {
 		db.close();
 		adapterList.notifyDataSetChanged();
 
-		if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE){
-			
-		
-		
+		if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
 
-		lv.setOnItemClickListener(new OnItemClickListener() {
+			lv.setOnItemClickListener(new OnItemClickListener() {
 
-		    public void onItemClick(AdapterView<?> parent, View view, int position,
-		            long id) {
-		        Log.d("mukodik ez a szar?", "ja, megnyomtad");
-		    	FragmentTab3b.pos = -1;
-		        FragmentTab3b fr3 = new FragmentTab3b();
-		      //  ((ShopListViewAdapter)(FragmentTab3b.lv.getAdapter())).notifyDataSetChanged();
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.detail32, fr3);
-				
-				//fr3.setPos(-1);
-				Log.d("visszaallit", ""+FragmentTab3b.pos);
-			//	ft.addToBackStack(null);
-				ft.commit();
-				
-		    }
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Log.d("mukodik ez a szar?", "ja, megnyomtad");
+					FragmentTab3b.pos = -1;
+					FragmentTab3b fr3 = new FragmentTab3b();
+					// ((ShopListViewAdapter)(FragmentTab3b.lv.getAdapter())).notifyDataSetChanged();
+					FragmentTransaction ft = getFragmentManager()
+							.beginTransaction();
+					ft.replace(R.id.detail32, fr3);
 
-		});
+					// fr3.setPos(-1);
+					Log.d("visszaallit", "" + FragmentTab3b.pos);
+					// ft.addToBackStack(null);
+					ft.commit();
+
+				}
+
+			});
 		}
 		return view;
 	}
@@ -197,9 +190,11 @@ public class FragmentTab3b2 extends SherlockFragment {
 	}
 
 	public void onBackPressed() {
-       Log.d("kocsog", "kocsog");
-	    
+		Log.d("kocsog", "kocsog");
+
 	}
+
+
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		DatabaseHandler db;
@@ -211,23 +206,18 @@ public class FragmentTab3b2 extends SherlockFragment {
 			// db = new DatabaseHandler(this); db.exportDB(); db.close();
 
 			Log.d("fr3b2", "import");
-		
-			
-			if(MainActivity.dark_bkg==true)
-			{
+
+			if (MainActivity.dark_bkg == true) {
 				MainActivity.dark_bkg = false;
 				view.setBackgroundColor(Color.WHITE);
-				
-			}
-			else
-			{
+
+			} else {
 				MainActivity.dark_bkg = true;
 				view.setBackgroundColor(Color.BLACK);
 			}
-			//itemList.clear();
-			
-			adapterList.notifyDataSetChanged();
+			// itemList.clear();
 
+			adapterList.notifyDataSetChanged();
 
 			return true;
 

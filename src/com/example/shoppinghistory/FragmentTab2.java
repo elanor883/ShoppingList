@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -80,26 +81,21 @@ public class FragmentTab2 extends SherlockFragment {
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 
+		Log.d("visiblefr2", "" + MainActivity.fr1Imp);
 		if (isVisibleToUser) {
-			/*
-			 * parent = getSherlockActivity();
-			 * 
-			 * if (parent instanceof MainActivity && ((MainActivity)
-			 * parent).dark_bkg == false) { // ((MainActivity)
-			 * parent).activePage = 1; mView.setBackgroundColor(Color.WHITE); }
-			 */
-			// labelList.clear();
-			// adapter.notifyDataSetChanged();
-			
-			if (MainActivity.dark_bkg == false && view!= null) {
-				//	((MainActivity) parent).activePage = 1;
-					view.setBackgroundColor(Color.WHITE);
-				}
-				else if(MainActivity.dark_bkg == true && view!= null)
-				{
-					view.setBackgroundColor(Color.BLACK);
-				}
-			
+			if (MainActivity.fr2Imp == true) {
+				MainActivity.fr2Imp = false;
+				Log.d("fragment2", "visible import");
+				refreshCurrentFragment();
+			}
+
+			if (MainActivity.dark_bkg == false && view != null) {
+				// ((MainActivity) parent).activePage = 1;
+				view.setBackgroundColor(Color.WHITE);
+			} else if (MainActivity.dark_bkg == true && view != null) {
+				view.setBackgroundColor(Color.BLACK);
+			}
+
 			if (adapter != null) {
 				adapter.notifyDataSetChanged();
 			}
@@ -717,37 +713,28 @@ public class FragmentTab2 extends SherlockFragment {
 		super.onResume();
 		Log.d("fr2", "onresume");
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		DatabaseHandler db;
 		switch (item.getItemId()) {
 
 		case R.id.settings_btn:
-			// write your code here
 
-			// db = new DatabaseHandler(this); db.exportDB(); db.close();
-
-			Log.d("fr1", "import");
-		
-			
-			if(MainActivity.dark_bkg==true)
-			{
-				MainActivity.dark_bkg = false;
-				view.setBackgroundColor(Color.WHITE);
-			}
-			else
-			{
-				MainActivity.dark_bkg = true;
-				view.setBackgroundColor(Color.BLACK);
-			}
-			//itemList.clear();
-			
-			adapter.notifyDataSetChanged();
-
-
+			settingsMenu();
 
 			return true;
 
+		case R.id.exp_btn:
+
+			db = new DatabaseHandler(getActivity());
+			db.exportDB();
+			db.close();
+
+			return true;
+		case R.id.imp_btn:
+
+			importMenu();
+			return true;
 		default:
 			break;
 
@@ -755,4 +742,60 @@ public class FragmentTab2 extends SherlockFragment {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void refreshCurrentFragment() {
+		FragmentTab2 fragment = new FragmentTab2();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.fragment2_container, fragment);
+		ft.commit();
+
+	}
+
+	public void settingsMenu() {
+		Log.d("fr1", "import");
+
+		if (MainActivity.dark_bkg == true) {
+			MainActivity.dark_bkg = false;
+			view.setBackgroundColor(Color.WHITE);
+		} else {
+			MainActivity.dark_bkg = true;
+			view.setBackgroundColor(Color.BLACK);
+		}
+
+		adapter.notifyDataSetChanged();
+
+	}
+
+	public void importMenu() {
+		DatabaseHandler db = new DatabaseHandler(getActivity());
+		try {
+			db.importDB("/sdcard/shoppingManager");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		db.close();
+		MainActivity.fr1Imp = true;
+		MainActivity.fr2Imp = true;
+		MainActivity.fr3Imp = true;
+		refreshCurrentFragment();
+
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		// if (isDetailActive) {
+		MenuItem item = menu.findItem(R.id.imp_btn);
+		MenuItem item2 = menu.findItem(R.id.exp_btn);
+		MenuItem item3 = menu.findItem(R.id.last_10);
+		MenuItem item4 = menu.findItem(R.id.last_20);
+		item.setEnabled(false);
+		item.setVisible(false);
+		item2.setEnabled(false);
+		item2.setVisible(false);
+		item3.setEnabled(false);
+		item3.setVisible(false);
+		item4.setEnabled(false);
+		item4.setVisible(false);
+		// }
+		super.onPrepareOptionsMenu(menu);
+	}
 }

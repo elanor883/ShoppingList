@@ -103,6 +103,7 @@ public class ShopListViewAdapter extends BaseAdapter {
 			duration.setTextColor(Color.parseColor("#30b4e0"));
 		}
 
+		
 		// holder.tv.setText("" + (position + 1) + " " +
 		// testList.get(position).getTestText());
 

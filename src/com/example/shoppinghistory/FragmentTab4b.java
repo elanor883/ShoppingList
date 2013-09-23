@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.Segment;
@@ -268,4 +269,18 @@ public class FragmentTab4b extends SherlockFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		//if (isDetailActive) {
+			MenuItem item = menu.findItem(R.id.imp_btn);
+			MenuItem item2 = menu.findItem(R.id.exp_btn);
+			item.setEnabled(false);
+			item.setVisible(false);
+			item2.setEnabled(false);
+			item2.setVisible(false);
+		//}
+		super.onPrepareOptionsMenu(menu);
+	}
+ 
 }

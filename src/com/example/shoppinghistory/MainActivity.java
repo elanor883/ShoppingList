@@ -24,9 +24,12 @@ public class MainActivity extends SherlockFragmentActivity {
 	ViewPager mPager;
 	boolean default_theme;
 	static boolean dark_bkg = false;
+	static boolean imported = false;
 	int activePage = 1;
 	ShopListViewAdapter mAdapterList;
-
+	static boolean fr1Imp = false;
+	static boolean fr2Imp = false;
+	static boolean fr3Imp = false;
 	Bundle mSavedInstanceState;
 
 	@Override
@@ -40,6 +43,9 @@ public class MainActivity extends SherlockFragmentActivity {
 		// Activate Navigation Mode Tabs
 		mActionBar = getSupportActionBar();
 		mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
+		mActionBar.setDisplayShowHomeEnabled(false);
+		mActionBar.setDisplayShowTitleEnabled(false);
 
 		default_theme = true;
 		mSavedInstanceState = savedInstanceState;
