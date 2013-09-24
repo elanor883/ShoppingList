@@ -46,6 +46,10 @@ public class FragmentTab3b extends SherlockFragment {
 	static int pos;
 	boolean darkbkg = true;
 	LinearLayout l1, l2;
+	MenuItem item9;
+	MenuItem item6;
+	MenuItem item7;
+	MenuItem item8;
 
 	LayoutInflater mInflater;
 	ViewGroup mContainer;
@@ -54,7 +58,7 @@ public class FragmentTab3b extends SherlockFragment {
 	SherlockFragmentActivity parent;
 	ShopListViewAdapter adapter;
 	FrameLayout fr32;
-	boolean isDetailActive = false;
+	static boolean isDetailActive = false;
 
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -71,25 +75,23 @@ public class FragmentTab3b extends SherlockFragment {
 				refreshCurrentFragment();
 			}
 
-		
-
-				if (MainActivity.dark_bkg == false && view != null) {
-					// ((MainActivity) parent).activePage = 1;
-					view.setBackgroundColor(Color.WHITE);
-				} else if (MainActivity.dark_bkg == true && view != null) {
-					view.setBackgroundColor(Color.BLACK);
-				}
-
-				if (adapter != null) {
-					adapter.notifyDataSetChanged();
-				}
-
-				else {
-					Log.d("fr1", "kva anyjat enek a szarnak");
-				}
+			if (MainActivity.dark_bkg == false && view != null) {
+				// ((MainActivity) parent).activePage = 1;
+				view.setBackgroundColor(Color.WHITE);
+			} else if (MainActivity.dark_bkg == true && view != null) {
+				view.setBackgroundColor(Color.BLACK);
 			}
 
-		 else {
+			if (adapter != null) {
+				adapter.notifyDataSetChanged();
+			}
+
+			else {
+				Log.d("fr1", "kva anyjat enek a szarnak");
+			}
+		}
+
+		else {
 			Log.d("fr1vis", "fos");
 		}
 
@@ -265,11 +267,18 @@ public class FragmentTab3b extends SherlockFragment {
 				view.setSelected(true);
 				pos = position;
 				adapter.setSelectedIndex(position);
+
 				if (isLandscape()) {
 					isDetailActive = false;
 				} else {
+					item9.setVisible(true);
+					item6.setVisible(false);
+					item8.setVisible(false);
+					item7.setVisible(false);
 					isDetailActive = true;
 				}
+
+				Log.d("detail1", "" + FragmentTab3b.isDetailActive);
 				showDetails(position);
 			}
 
@@ -430,17 +439,38 @@ public class FragmentTab3b extends SherlockFragment {
 		MenuItem item3 = menu.findItem(R.id.last_10);
 		MenuItem item4 = menu.findItem(R.id.last_20);
 		MenuItem item5 = menu.findItem(R.id.all_items);
-		MenuItem item6 = menu.findItem(R.id.order_daily);
-		MenuItem item7 = menu.findItem(R.id.order_weekly);
-		MenuItem item8 = menu.findItem(R.id.order_monthly);
+		item6 = menu.findItem(R.id.order_daily);
+		item7 = menu.findItem(R.id.order_weekly);
+		item8 = menu.findItem(R.id.order_monthly);
+		item9 = menu.findItem(R.id.back_btn);
+
 		item.setVisible(false);
 		item2.setVisible(false);
 		item3.setVisible(false);
 		item4.setVisible(false);
 		item5.setVisible(false);
-		item6.setVisible(true);
-		item7.setVisible(true);
-		item8.setVisible(true);
+
+		if (!isDetailActive) {
+
+			item6.setVisible(true);
+			item7.setVisible(true);
+			item8.setVisible(true);
+			item9.setVisible(false);
+		}
+
+		else {
+			item6.setVisible(false);
+			item7.setVisible(false);
+			item8.setVisible(false);
+			item9.setVisible(true);
+		}
+
+		if (isLandscape()) {
+			item6.setVisible(true);
+			item7.setVisible(true);
+			item8.setVisible(true);
+			item9.setVisible(false);
+		}
 		super.onPrepareOptionsMenu(menu);
 	}
 
@@ -452,18 +482,13 @@ public class FragmentTab3b extends SherlockFragment {
 
 			Log.d("fr3b", "settings");
 			settingsMenu();
-			
-			return true;
-
-		case R.id.exp_btn:
-			db = new DatabaseHandler(getActivity());
-			db.exportDB();
-			db.close();
 
 			return true;
-		case R.id.imp_btn:
 
-			importMenu();
+		case R.id.back_btn:
+
+			Log.d("fragment3", "baaaack to the futureeee");
+			refreshMainFragment();
 			return true;
 		default:
 			break;
@@ -473,13 +498,14 @@ public class FragmentTab3b extends SherlockFragment {
 
 	public void refreshCurrentFragment() {
 		if (isDetailActive) {
-			/*Log.d("fr32222", "detail-settings");
-			FragmentTab3b2 aFrag = new FragmentTab3b2();
-			FragmentTransaction ft = getFragmentManager().beginTransaction();
-			ft.replace(R.id.detail32, aFrag);
-			// ft.addToBackStack(null);
-			ft.commit();*/
-			
+			/*
+			 * Log.d("fr32222", "detail-settings"); FragmentTab3b2 aFrag = new
+			 * FragmentTab3b2(); FragmentTransaction ft =
+			 * getFragmentManager().beginTransaction();
+			 * ft.replace(R.id.detail32, aFrag); // ft.addToBackStack(null);
+			 * ft.commit();
+			 */
+
 		}
 
 		else {
@@ -492,8 +518,7 @@ public class FragmentTab3b extends SherlockFragment {
 		}
 	}
 
-	public void settingsMenu()
-	{
+	public void settingsMenu() {
 		if (MainActivity.dark_bkg == true) {
 			MainActivity.dark_bkg = false;
 			view.setBackgroundColor(Color.WHITE);
@@ -507,17 +532,16 @@ public class FragmentTab3b extends SherlockFragment {
 		if (isDetailActive) {
 			Log.d("fr32222", "detail-settings");
 			FragmentTab3b2 aFrag = new FragmentTab3b2();
-			FragmentTransaction ft = getFragmentManager()
-					.beginTransaction();
+			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			ft.replace(R.id.detail32, aFrag);
 			// ft.addToBackStack(null);
 			ft.commit();
 		}
 		adapter.notifyDataSetChanged();
-		
+
 	}
-	
-	public void importMenu(){
+
+	public void importMenu() {
 		DatabaseHandler db;
 		db = new DatabaseHandler(getActivity());
 		try {
@@ -529,5 +553,21 @@ public class FragmentTab3b extends SherlockFragment {
 		db.close();
 		MainActivity.imported = true;
 		refreshCurrentFragment();
+	}
+
+	public void refreshMainFragment() {
+		FragmentTab3b.pos = -1;
+		FragmentTab3b fr3 = new FragmentTab3b();
+		// ((ShopListViewAdapter)(FragmentTab3b.lv.getAdapter())).notifyDataSetChanged();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.detail32, fr3);
+
+		FragmentTab3b.isDetailActive = false;
+		// fr3.setPos(-1);
+		Log.d("visszaallit", "" + FragmentTab3b.pos);
+		// ft.addToBackStack(null);
+		ft.commit();
+
+		Log.d("detail2", "" + FragmentTab3b.isDetailActive);
 	}
 }

@@ -47,6 +47,10 @@ public class FragmentTab3b2 extends SherlockFragment {
 	int price;
 	View view;
 	static ListView lv;
+	MenuItem item9;
+	MenuItem item6;
+	MenuItem item7;
+	MenuItem item8;
 
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -87,6 +91,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 					Log.d("fr2", "kva anyjat enek a szarnak");
 				}
 			}
+			
 
 		} else {
 			Log.d("fr1vis", "fos");
@@ -162,18 +167,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					Log.d("mukodik ez a szar?", "ja, megnyomtad");
-					FragmentTab3b.pos = -1;
-					FragmentTab3b fr3 = new FragmentTab3b();
-					// ((ShopListViewAdapter)(FragmentTab3b.lv.getAdapter())).notifyDataSetChanged();
-					FragmentTransaction ft = getFragmentManager()
-							.beginTransaction();
-					ft.replace(R.id.detail32, fr3);
-
-					// fr3.setPos(-1);
-					Log.d("visszaallit", "" + FragmentTab3b.pos);
-					// ft.addToBackStack(null);
-					ft.commit();
+					refreshMainFragment();
 
 				}
 
@@ -194,8 +188,6 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 	}
 
-
-	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		DatabaseHandler db;
 		switch (item.getItemId()) {
@@ -226,5 +218,31 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+
+		super.onPrepareOptionsMenu(menu);
+	}
+
+
+	
+	public void refreshMainFragment()
+	{
+		FragmentTab3b.pos = -1;
+		FragmentTab3b fr3 = new FragmentTab3b();
+		// ((ShopListViewAdapter)(FragmentTab3b.lv.getAdapter())).notifyDataSetChanged();
+		FragmentTransaction ft = getFragmentManager()
+				.beginTransaction();
+		ft.replace(R.id.detail32, fr3);
+		
+		FragmentTab3b.isDetailActive = false;
+		// fr3.setPos(-1);
+		Log.d("visszaallit", "" + FragmentTab3b.pos);
+		// ft.addToBackStack(null);
+		ft.commit();
+		
+		Log.d("detail2", ""+ FragmentTab3b.isDetailActive);
 	}
 }

@@ -791,6 +791,7 @@ public class FragmentTab2 extends SherlockFragment {
 		MenuItem item6 = menu.findItem(R.id.order_daily);
 		MenuItem item7 = menu.findItem(R.id.order_weekly);
 		MenuItem item8 = menu.findItem(R.id.order_monthly);
+		MenuItem item9 = menu.findItem(R.id.back_btn);
 		item.setVisible(false);
 		item2.setVisible(false);
 		item3.setVisible(false);
@@ -799,6 +800,7 @@ public class FragmentTab2 extends SherlockFragment {
 		item6.setVisible(false);
 		item7.setVisible(false);
 		item8.setVisible(false);
+		item9.setVisible(false);
 		super.onPrepareOptionsMenu(menu);
 	}
 }
