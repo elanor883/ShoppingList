@@ -80,12 +80,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 			}
 
 			else {
-				if (MainActivity.dark_bkg == false && view != null) {
-					// ((MainActivity) parent).activePage = 1;
-					view.setBackgroundColor(Color.parseColor("#f1f1f2"));
-				} else if (MainActivity.dark_bkg == true && view != null) {
-					view.setBackgroundColor(Color.BLACK);
-				}
+				setBkg();
 
 				if (adapterList != null) {
 					adapterList.notifyDataSetChanged();
@@ -102,6 +97,16 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 	}
 
+	private void setBkg() {
+		// TODO Auto-generated method stub
+		if (MainActivity.dark_bkg == false && view != null) {
+			// ((MainActivity) parent).activePage = 1;
+			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
+		} else if (MainActivity.dark_bkg == true && view != null) {
+			view.setBackgroundColor(Color.BLACK);
+		}
+	}
+
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, Bundle savedInstanceState) {
@@ -112,6 +117,8 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 		lv = (ListView) view.findViewById(R.id.listitem_lv_frag32);
 		setHasOptionsMenu(false);
+		
+		setBkg();
 		
 		if(FragmentTab3b.group == 0)
 		{

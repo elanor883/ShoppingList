@@ -87,12 +87,8 @@ public class FragmentTab1 extends SherlockFragment {
 					Log.d("fragment1", "visible import");
 					refreshCurrentFragment();
 				}
-				if (MainActivity.dark_bkg == false && mView != null) {
-					// ((MainActivity) parent).activePage = 1;
-					mView.setBackgroundColor(Color.parseColor("#f1f1f2"));
-				} else if (MainActivity.dark_bkg == true && mView != null) {
-					mView.setBackgroundColor(Color.BLACK);
-				}
+
+				setBkg();
 				// itemList.clear();
 				// mAdapterList.notifyDataSetChanged();
 
@@ -124,6 +120,8 @@ public class FragmentTab1 extends SherlockFragment {
 		mView = inflater.inflate(R.layout.fragmenttab1, container, false);
 		registerForContextMenu(mView.findViewById(R.id.listitem_lv));
 		setHasOptionsMenu(true);
+		
+		setBkg();
 		/*
 		 * boolean dark_bkg = true; parent = getSherlockActivity();
 		 * setHasOptionsMenu(true);
@@ -358,7 +356,7 @@ public class FragmentTab1 extends SherlockFragment {
 			return true;
 		case R.id.last_10:
 
-			refreshLastFewElements(1);
+			refreshLastFewElements(10);
 
 			return true;
 		case R.id.last_20:
@@ -458,7 +456,8 @@ public class FragmentTab1 extends SherlockFragment {
 	      if (v.getId()==R.id.listitem_lv) {
 	    	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 	    	  selectedListItem = info.position;
-	    	  menu.setHeaderTitle(""+info.position + " "+ idArray.get(selectedListItem));
+	    	  //menu.setHeaderTitle(""+info.position + " "+ idArray.get(selectedListItem));
+	    	  menu.setHeaderTitle("Menu");
 	    	  android.view.MenuInflater inflater = getActivity().getMenuInflater();
 	          inflater.inflate(R.menu.main2, menu);
 	      }
@@ -507,5 +506,15 @@ public class FragmentTab1 extends SherlockFragment {
 		
 		//refreshCurrentFragment();
 		
+	}
+	
+	public void setBkg()
+	{
+		if (MainActivity.dark_bkg == false && mView != null) {
+			// ((MainActivity) parent).activePage = 1;
+			mView.setBackgroundColor(Color.parseColor("#f1f1f2"));
+		} else if (MainActivity.dark_bkg == true && mView != null) {
+			mView.setBackgroundColor(Color.BLACK);
+		}
 	}
 }

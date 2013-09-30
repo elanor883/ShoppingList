@@ -69,12 +69,7 @@ public class FragmentTab4b extends SherlockFragment {
 			// labelList.clear();
 			// adapter.notifyDataSetChanged();
 			
-			if (MainActivity.dark_bkg == false && view != null) {
-				// ((MainActivity) parent).activePage = 1;
-				view.setBackgroundColor(Color.parseColor("#f1f1f2"));
-			} else if (MainActivity.dark_bkg == true && view != null) {
-				view.setBackgroundColor(Color.BLACK);
-			}
+setBkg();
 			
 
 		} else {
@@ -83,6 +78,16 @@ public class FragmentTab4b extends SherlockFragment {
 
 	}
 	
+	private void setBkg() {
+		// TODO Auto-generated method stub
+		if (MainActivity.dark_bkg == false && view != null) {
+			// ((MainActivity) parent).activePage = 1;
+			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
+		} else if (MainActivity.dark_bkg == true && view != null) {
+			view.setBackgroundColor(Color.BLACK);
+		}	
+	}
+
 	@Override
 	public void onStart(){
 		super.onStart();
@@ -94,20 +99,7 @@ public class FragmentTab4b extends SherlockFragment {
 		// Get the view from fragmenttab1.xml
 		view = inflater.inflate(R.layout.stat, container, false);
 
-		boolean dark_bkg = true;
-		SherlockFragmentActivity parent = getSherlockActivity();
-
-		if (parent instanceof MainActivity) {
-			dark_bkg = ((MainActivity) parent).dark_bkg;
-			Log.d("Fragment2", ""+dark_bkg);
-		}
-
-		if (!dark_bkg) {
-			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
-
-		} else {
-			view.setBackgroundColor(Color.BLACK);
-		}
+setBkg();
 		
 		setHasOptionsMenu(true);
 		XYPlot mySimpleXYPlot = (XYPlot) view.findViewById(R.id.mySimpleXYPlot);

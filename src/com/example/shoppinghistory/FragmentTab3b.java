@@ -74,18 +74,13 @@ public class FragmentTab3b extends SherlockFragment {
 		super.setUserVisibleHint(isVisibleToUser);
 
 		if (isVisibleToUser) {
-			if (MainActivity.fr3Imp == true) {
+		/*	if (MainActivity.fr3Imp == true) {
 				MainActivity.fr3Imp = false;
 				refreshCurrentFragment();
-			}
+			}*/
 
-			if (MainActivity.dark_bkg == false && view != null) {
-				// ((MainActivity) parent).activePage = 1;
-				view.setBackgroundColor(Color.parseColor("#f1f1f2"));
-			} else if (MainActivity.dark_bkg == true && view != null) {
-				view.setBackgroundColor(Color.BLACK);
-			}
-
+			setBkg();
+			
 			if (adapter != null) {
 				adapter.notifyDataSetChanged();
 			}
@@ -121,27 +116,13 @@ public class FragmentTab3b extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// Get the view from fragmenttab2.xml
+
 
 		view = inflater.inflate(R.layout.fragmenttab32, container, false);
-
 		fr32 = (FrameLayout) view.findViewById(R.id.detail32);
-		boolean dark_bkg = true;
-		SherlockFragmentActivity parent = getSherlockActivity();
 
-		if (parent instanceof MainActivity) {
-			dark_bkg = ((MainActivity) parent).dark_bkg;
-		}
-
-		/*
-		 * if (!dark_bkg) { view.setBackgroundColor(Color.WHITE);
-		 * 
-		 * } else { view.setBackgroundColor(Color.BLACK); }
-		 */
-
+		setBkg();
 		setHasOptionsMenu(true);
-
-		Log.d("vissza", "vissza2");
 
 		mInflater = inflater;
 		mContainer = container;
@@ -634,5 +615,15 @@ public class FragmentTab3b extends SherlockFragment {
 
 		adapter = new ShopListViewAdapter(getActivity(), listitems);
 		lv.setAdapter(adapter);
+	}
+	
+	public void setBkg()
+	{
+		if (MainActivity.dark_bkg == false && view != null) {
+			// ((MainActivity) parent).activePage = 1;
+			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
+		} else if (MainActivity.dark_bkg == true && view != null) {
+			view.setBackgroundColor(Color.BLACK);
+		}
 	}
 }

@@ -89,12 +89,7 @@ public class FragmentTab2 extends SherlockFragment {
 				refreshCurrentFragment();
 			}
 
-			if (MainActivity.dark_bkg == false && view != null) {
-				// ((MainActivity) parent).activePage = 1;
-				view.setBackgroundColor(Color.parseColor("#f1f1f2"));
-			} else if (MainActivity.dark_bkg == true && view != null) {
-				view.setBackgroundColor(Color.BLACK);
-			}
+			setBkg();
 
 			if (adapter != null) {
 				adapter.notifyDataSetChanged();
@@ -108,6 +103,16 @@ public class FragmentTab2 extends SherlockFragment {
 			Log.d("fr1vis", "fos");
 		}
 
+	}
+
+	private void setBkg() {
+		if (MainActivity.dark_bkg == false && view != null) {
+			// ((MainActivity) parent).activePage = 1;
+			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
+		} else if (MainActivity.dark_bkg == true && view != null) {
+			view.setBackgroundColor(Color.BLACK);
+		}
+		
 	}
 
 	@Override
@@ -130,21 +135,9 @@ public class FragmentTab2 extends SherlockFragment {
 		mContainer = container;
 		mSavedInstanceState = savedInstanceState;
 
-		boolean dark_bkg = true;
-		SherlockFragmentActivity parent = getSherlockActivity();
+		setBkg();
 		setHasOptionsMenu(true);
 
-		if (parent instanceof MainActivity) {
-			dark_bkg = ((MainActivity) parent).dark_bkg;
-			Log.d("Fragment2", "" + dark_bkg);
-		}
-
-		if (!dark_bkg) {
-			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
-
-		} else {
-			view.setBackgroundColor(Color.BLACK);
-		}
 
 		// setHasOptionsMenu(true);
 
