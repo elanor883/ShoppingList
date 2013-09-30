@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -185,6 +186,8 @@ public class FragmentTab1 extends SherlockFragment {
 				// text.setText("Android custom dialog example!");
 				final DatePicker dp = (DatePicker) dialog
 						.findViewById(R.id.datePicker1);
+				
+				final TextView tv = (TextView) dialog.findViewById(R.id.textView3);
 				// dp.setCalendarViewShown(false);
 				int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 				if (currentapiVersion >= 11) {
@@ -217,7 +220,12 @@ public class FragmentTab1 extends SherlockFragment {
 					@Override
 					public void onClick(View v) {
 
-						if (text_price.length() > 0) {
+						if(spin.getSelectedItem()== null)
+						{
+							tv.setText("You need to add category first!");
+						}
+						else if (text_price.length() > 0 && Integer.parseInt(text_price.getText()
+								.toString())!=0 && spin.getSelectedItem().toString() != null) {
 
 							year = dp.getYear();
 							month = dp.getMonth() + 1;
@@ -263,6 +271,8 @@ public class FragmentTab1 extends SherlockFragment {
 							refreshLastFewElements(10);
 							dialog.dismiss();
 						}
+						
+						
 					}
 				});
 
