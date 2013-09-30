@@ -1,31 +1,35 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollView1"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:fillViewport="true">
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
 
     <LinearLayout
-                 android:orientation="vertical"  
-                 android:layout_height="fill_parent"  
-                 android:layout_width="fill_parent">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" 
+        android:id="@+id/fr4"
+        >
 
-  
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+"
 
+            <com.androidplot.xy.XYPlot
+                android:id="@+id/mySimpleXYPlot"
+                android:layout_width="fill_parent"
+                android:layout_height="300dp"
+                title="This month&apos;s cost summary" />
 
+            <com.androidplot.pie.PieChart
+                android:id="@+id/mySimplePieChart"
+                android:layout_width="fill_parent"
+                android:layout_height="300dp"
+                androidPlot.graphWidget.gridLinePaint.color="#000000"
+                androidPlot.title="This month&apos;s costing rate" />
+        </LinearLayout>
+    </LinearLayout>
 
-  <com.androidplot.xy.XYPlot
-    android:id="@+id/mySimpleXYPlot"
-    android:layout_width="fill_parent"
-    android:layout_height="300dp"
-    title="This month's cost summary"/>
-  
-
-     <com.androidplot.pie.PieChart
-            android:id="@+id/mySimplePieChart"
-            android:layout_width="fill_parent"
-            android:layout_height="300dp"
-            androidPlot.title="This month's costing rate"
-            androidPlot.graphWidget.gridLinePaint.color="#000000"/>
-
-      </LinearLayout>   
 </ScrollView>

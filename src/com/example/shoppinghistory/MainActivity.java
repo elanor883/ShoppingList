@@ -101,7 +101,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		mActionBar.addTab(tab);
 
 		// Create second Tab
-		tab = mActionBar.newTab().setText("Labels").setTabListener(tabListener);
+		tab = mActionBar.newTab().setText("Categories").setTabListener(tabListener);
 		mActionBar.addTab(tab);
 
 		// Create third Tab
