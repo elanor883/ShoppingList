@@ -91,7 +91,7 @@ public class FragmentTab2 extends SherlockFragment {
 
 			if (MainActivity.dark_bkg == false && view != null) {
 				// ((MainActivity) parent).activePage = 1;
-				view.setBackgroundColor(Color.WHITE);
+				view.setBackgroundColor(Color.parseColor("#f1f1f2"));
 			} else if (MainActivity.dark_bkg == true && view != null) {
 				view.setBackgroundColor(Color.BLACK);
 			}
@@ -140,7 +140,7 @@ public class FragmentTab2 extends SherlockFragment {
 		}
 
 		if (!dark_bkg) {
-			view.setBackgroundColor(Color.WHITE);
+			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
 
 		} else {
 			view.setBackgroundColor(Color.BLACK);
@@ -756,7 +756,7 @@ public class FragmentTab2 extends SherlockFragment {
 
 		if (MainActivity.dark_bkg == true) {
 			MainActivity.dark_bkg = false;
-			view.setBackgroundColor(Color.WHITE);
+			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
 		} else {
 			MainActivity.dark_bkg = true;
 			view.setBackgroundColor(Color.BLACK);

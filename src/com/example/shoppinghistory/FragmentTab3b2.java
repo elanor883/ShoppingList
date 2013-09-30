@@ -36,6 +36,10 @@ public class FragmentTab3b2 extends SherlockFragment {
 	static final String KEY_CORNER = "corner";
 	static final String KEY_IMG = "img";
 	LabelCostListAdapter adapterList;
+	
+	List<ShopList> shoplist2;
+	//ArrayList<String> catMonth = db.getCategories();
+	List<Pair<String, Integer>> monthlyCost;
 
 	ArrayList<HashMap<String, String>> itemList = new ArrayList<HashMap<String, String>>();
 	Button dd;
@@ -78,7 +82,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 			else {
 				if (MainActivity.dark_bkg == false && view != null) {
 					// ((MainActivity) parent).activePage = 1;
-					view.setBackgroundColor(Color.WHITE);
+					view.setBackgroundColor(Color.parseColor("#f1f1f2"));
 				} else if (MainActivity.dark_bkg == true && view != null) {
 					view.setBackgroundColor(Color.BLACK);
 				}
@@ -91,7 +95,6 @@ public class FragmentTab3b2 extends SherlockFragment {
 					Log.d("fr2", "kva anyjat enek a szarnak");
 				}
 			}
-			
 
 		} else {
 			Log.d("fr1vis", "fos");
@@ -109,37 +112,56 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 		lv = (ListView) view.findViewById(R.id.listitem_lv_frag32);
 		setHasOptionsMenu(false);
+		
+		if(FragmentTab3b.group == 0)
+		{
+			groupByDayResult();
+		}
+		else if(FragmentTab3b.group == 1)
+		{
+			groupByWeekResult();
+		}
+		
+		else if(FragmentTab3b.group == 2)
+		{
+			groupByMonthResult();
+		}
 
-		Calendar c = Calendar.getInstance();
+/*		Calendar c = Calendar.getInstance();
 
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
 		List<ShopList> shoplist2 = db.getCostPerDayPerType();
 		ArrayList<String> catMonth = db.getCategories();
 		List<Pair<String, Integer>> monthlyCost = new ArrayList<Pair<String, Integer>>();
 
+		for (ShopList k : shoplist2) {
+			Log.d("lekerdezes",
+					"" + k.getDate() + " " + k.getPrice() + " "
+							+ k.getTypeName());
+		}
 		db.close();
 
 		int i = 0;
 
-		for (String type_name : catMonth) {
-			monthlyCost.add(i, new Pair<String, Integer>(type_name, 0));
+		//for (String type_name : catMonth) {
+			// monthlyCost.add(i, new Pair<String, Integer>(type_name, 0));
 			for (ShopList item : shoplist2) {
 				String date = item.getDate();
 				String type = item.getTypeName();
-				int month = Integer.parseInt(date.substring(5, 7));
-				if (date.equals(FragmentTab3b.selected)
-						&& type.equals(type_name)) {
+			//	int month = Integer.parseInt(date.substring(5, 7));
+				if (date.equals(FragmentTab3b.selected)) {
 					int price = item.getPrice();
-					int current_price = monthlyCost.get(i).second;
-					monthlyCost.set(i, new Pair<String, Integer>(type_name,
-							current_price + price));
+					//int current_price = monthlyCost.get(i).second;
+					//monthlyCost.set(i, new Pair<String, Integer>(type_name,
+						//	current_price + price));
+					monthlyCost.add(new Pair<String, Integer>(type, price));
 				}
 			}
-			Log.d("details adat",
-					monthlyCost.get(i).first + " " + monthlyCost.get(i).second);
-			i++;
+			//Log.d("details adat",
+				//	monthlyCost.get(i).first + " " + monthlyCost.get(i).second);
+			//i++;
 
-		}
+		//}
 
 		i = 0;
 		adapterList = new LabelCostListAdapter(getActivity(), itemList);
@@ -160,7 +182,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 		// lv.setAdapter(adapter);
 		db.close();
 		adapterList.notifyDataSetChanged();
-
+*/
 		if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
 
 			lv.setOnItemClickListener(new OnItemClickListener() {
@@ -201,7 +223,7 @@ public class FragmentTab3b2 extends SherlockFragment {
 
 			if (MainActivity.dark_bkg == true) {
 				MainActivity.dark_bkg = false;
-				view.setBackgroundColor(Color.WHITE);
+				view.setBackgroundColor(Color.parseColor("#f1f1f2"));
 
 			} else {
 				MainActivity.dark_bkg = true;
@@ -226,23 +248,127 @@ public class FragmentTab3b2 extends SherlockFragment {
 		super.onPrepareOptionsMenu(menu);
 	}
 
-
-	
-	public void refreshMainFragment()
-	{
+	public void refreshMainFragment() {
 		FragmentTab3b.pos = -1;
 		FragmentTab3b fr3 = new FragmentTab3b();
 		// ((ShopListViewAdapter)(FragmentTab3b.lv.getAdapter())).notifyDataSetChanged();
-		FragmentTransaction ft = getFragmentManager()
-				.beginTransaction();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.detail32, fr3);
-		
+
 		FragmentTab3b.isDetailActive = false;
 		// fr3.setPos(-1);
 		Log.d("visszaallit", "" + FragmentTab3b.pos);
 		// ft.addToBackStack(null);
 		ft.commit();
+
+		Log.d("detail2", "" + FragmentTab3b.isDetailActive);
+	}
+	
+	public void groupByDayResult()
+	{
+		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+		shoplist2 = db.getCostPerDayPerType();
+		monthlyCost = new ArrayList<Pair<String, Integer>>();
 		
-		Log.d("detail2", ""+ FragmentTab3b.isDetailActive);
+		for (ShopList item : shoplist2) {
+			String date = item.getDate();
+			String type = item.getTypeName();
+			if (date.equals(FragmentTab3b.selected)) {
+				int price = item.getPrice();
+
+				monthlyCost.add(new Pair<String, Integer>(type, price));
+			}
+		}
+
+	adapterList = new LabelCostListAdapter(getActivity(), itemList);
+	lv.setAdapter(adapterList);
+
+
+	for (Pair<String, Integer> current : monthlyCost) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		// color =
+		if (current.second != 0) {
+			map.put(KEY_TITLE, current.first);
+			// map.put(KEY_SUBTITLE, "vmi");
+			map.put(KEY_CORNER, "" + current.second + " ˆ");
+			map.put(KEY_IMG, db.getResId(current.first));
+			itemList.add(map);
+		}
+	}
+	// lv.setAdapter(adapter);
+	db.close();
+	adapterList.notifyDataSetChanged();
+	}
+	
+	public void groupByWeekResult()
+	{
+		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+		shoplist2 = db.getCostPerWeekPerType();
+		monthlyCost = new ArrayList<Pair<String, Integer>>();
+		
+		for (ShopList item : shoplist2) {
+			String week = ""+item.getWeek();
+			String type = item.getTypeName();
+			if (week.equals(FragmentTab3b.selected)) {
+				int price = item.getPrice();
+
+				monthlyCost.add(new Pair<String, Integer>(type, price));
+			}
+		}
+
+	adapterList = new LabelCostListAdapter(getActivity(), itemList);
+	lv.setAdapter(adapterList);
+
+
+	for (Pair<String, Integer> current : monthlyCost) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		// color =
+		if (current.second != 0) {
+			map.put(KEY_TITLE, current.first);
+			// map.put(KEY_SUBTITLE, "vmi");
+			map.put(KEY_CORNER, "" + current.second + " ˆ");
+			map.put(KEY_IMG, db.getResId(current.first));
+			itemList.add(map);
+		}
+	}
+	// lv.setAdapter(adapter);
+	db.close();
+	adapterList.notifyDataSetChanged();
+	}
+	
+	public void groupByMonthResult()
+	{
+		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+		shoplist2 = db.getCostPerMonthPerType();
+		monthlyCost = new ArrayList<Pair<String, Integer>>();
+		
+		for (ShopList item : shoplist2) {
+			String month = ""+item.getMonth();
+			String type = item.getTypeName();
+			if (month.equals(FragmentTab3b.selected)) {
+				int price = item.getPrice();
+
+				monthlyCost.add(new Pair<String, Integer>(type, price));
+			}
+		}
+
+	adapterList = new LabelCostListAdapter(getActivity(), itemList);
+	lv.setAdapter(adapterList);
+
+
+	for (Pair<String, Integer> current : monthlyCost) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		// color =
+		if (current.second != 0) {
+			map.put(KEY_TITLE, current.first);
+			// map.put(KEY_SUBTITLE, "vmi");
+			map.put(KEY_CORNER, "" + current.second + " ˆ");
+			map.put(KEY_IMG, db.getResId(current.first));
+			itemList.add(map);
+		}
+	}
+	// lv.setAdapter(adapter);
+	db.close();
+	adapterList.notifyDataSetChanged();
 	}
 }

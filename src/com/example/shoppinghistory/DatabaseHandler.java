@@ -275,6 +275,105 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return shoppinglistList;
 	}
 
+	
+	public List<ShopList> getSumCostPerWeek() {
+		String selectQuery = "select strftime('%W', date) AS week, sum(price) from shoplist GROUP BY week";
+
+		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				ShopList shop_list = new ShopList();
+				shop_list.setWeek(Integer.parseInt(cursor.getString(0)));
+				shop_list.setPrice(Integer.parseInt(cursor.getString(1)));
+
+				// Adding contact to list
+				shoppinglistList.add(shop_list);
+			} while (cursor.moveToNext());
+		}
+
+		cursor.close();
+		// return contact list
+		return shoppinglistList;
+	}
+	
+	public List<ShopList> getSumCostPerMonth() {
+		String selectQuery = "select strftime('%m', date) AS month, sum(price) from shoplist GROUP BY month";
+
+		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				ShopList shop_list = new ShopList();
+				shop_list.setMonth(Integer.parseInt(cursor.getString(0)));
+				shop_list.setPrice(Integer.parseInt(cursor.getString(1)));
+
+				// Adding contact to list
+				shoppinglistList.add(shop_list);
+			} while (cursor.moveToNext());
+		}
+
+		cursor.close();
+		// return contact list
+		return shoppinglistList;
+	}
+	
+	public List<ShopList> getCostPerWeekPerType() {
+		String selectQuery = "select strftime('%W', date) AS week, type_name, sum(price) from shoplist GROUP BY week, type_name";
+
+		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				ShopList shop_list = new ShopList();
+				shop_list.setWeek(Integer.parseInt(cursor.getString(0)));
+				shop_list.setTypeName(cursor.getString(1));
+				shop_list.setPrice(Integer.parseInt(cursor.getString(2)));
+
+				// Adding contact to list
+				shoppinglistList.add(shop_list);
+			} while (cursor.moveToNext());
+		}
+
+		cursor.close();
+		// return contact list
+		return shoppinglistList;
+	}
+	
+	public List<ShopList> getCostPerMonthPerType() {
+		String selectQuery = "select strftime('%m', date) AS month, type_name, sum(price) from shoplist GROUP BY month, type_name";
+
+		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				ShopList shop_list = new ShopList();
+				shop_list.setMonth(Integer.parseInt(cursor.getString(0)));
+				shop_list.setTypeName(cursor.getString(1));
+				shop_list.setPrice(Integer.parseInt(cursor.getString(2)));
+
+				// Adding contact to list
+				shoppinglistList.add(shop_list);
+			} while (cursor.moveToNext());
+		}
+
+		cursor.close();
+		// return contact list
+		return shoppinglistList;
+	}
+	
 	public List<ShopList> getLastFewItems(int num) {
 
 		String selectQuery;

@@ -1,6 +1,7 @@
 package com.example.shoppinghistory;
 
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -59,6 +60,9 @@ public class FragmentTab3b extends SherlockFragment {
 	ShopListViewAdapter adapter;
 	FrameLayout fr32;
 	static boolean isDetailActive = false;
+	ArrayList<HashMap<String, String>> listitems;
+	static int group = 0;
+	List<String> dateList;
 
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -77,7 +81,7 @@ public class FragmentTab3b extends SherlockFragment {
 
 			if (MainActivity.dark_bkg == false && view != null) {
 				// ((MainActivity) parent).activePage = 1;
-				view.setBackgroundColor(Color.WHITE);
+				view.setBackgroundColor(Color.parseColor("#f1f1f2"));
 			} else if (MainActivity.dark_bkg == true && view != null) {
 				view.setBackgroundColor(Color.BLACK);
 			}
@@ -162,99 +166,19 @@ public class FragmentTab3b extends SherlockFragment {
 			p2.weight = 0;
 			l2.setLayoutParams(p2);
 		}
-		final List<String> dateList = new ArrayList<String>();
 
-		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
-		// db.addContact(new ShopList("Food", 21, "2013-12-17"));
-		// db.addContact(new ShopList("Party", 8, "2013-07-17" ));
-		// db.addContact(new ShopList("Travel", 10, "2013-07-27"));
-		// db.addContact(new ShopList("Accomodation", 215, "2013-07-18"));
+		if (group == 0)
 
-		ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-
-		// adding each child node to HashMap key =&gt; value
-
-		/*
-		 * map.put(KEY_TITLE, "2013.07.07"); map.put(KEY_ARTIST, "Monday");
-		 * map.put(KEY_DURATION, "32 ˆ"); songsList.add(map); HashMap<String,
-		 * String> map2 = new HashMap<String, String>(); map2.put(KEY_TITLE,
-		 * "2013.07.12"); map2.put(KEY_ARTIST, "Friday"); map2.put(KEY_DURATION,
-		 * "42 ˆ");
-		 */
-
-		List<ShopList> shoplist = db.getSumCostPerDay();
-
-		for (ShopList cn : shoplist) {
-			String log = "Category: " + cn.getTypeName() + " ,Price: "
-					+ cn.getPrice();
-			// Writing Contacts to log
-			HashMap<String, String> map = new HashMap<String, String>();
-			String date = cn.getDate();
-			int year = Integer.parseInt(date.substring(0, 4));
-			int month = Integer.parseInt(date.substring(5, 7));
-			int day = Integer.parseInt(date.substring(8, 10));
-
-			Log.d("datum", "" + year + " " + month + " " + day);
-			map.put(KEY_TITLE, date);
-			map.put(KEY_SUBTITLE, dayOfWeek(year, month, day));
-			map.put(KEY_CORNER, "" + cn.getPrice() + " ˆ");
-			dateList.add(date);
-			songsList.add(map);
-
-			Log.d("Name: ", log);
+		{
+			groupByDay();
 		}
-		ArrayList<String> cat = db.getCategories();
-		for (String c : cat) {
-			Log.d("cat", c);
+
+		else if (group == 1) {
+			groupByWeek();
 		}
-		// String values[] = new String[]{"ize", "hoze"};
-
-		/*
-		 * final ArrayList<String> list = new ArrayList<String>(); for (int i =
-		 * 0; i < values.length; ++i) { list.add(values[i]); }
-		 */
-		/*
-		 * final StableArrayAdapter adapter = new
-		 * StableArrayAdapter(getActivity(),
-		 * android.R.layout.simple_list_item_1, list); lv.setAdapter(adapter);
-		 * 
-		 * lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		 * 
-		 * 
-		 * @Override public void onItemClick(AdapterView<?> parent, final View
-		 * view, int position, long id) { final String item = (String)
-		 * parent.getItemAtPosition(position);
-		 * view.animate().setDuration(2000).alpha(0) .withEndAction(new
-		 * Runnable() {
-		 * 
-		 * @Override public void run() { list.remove(item);
-		 * adapter.notifyDataSetChanged(); view.setAlpha(1); } }); }
-		 * 
-		 * });
-		 */
-
-		db.close();
-
-		/*
-		 * View vi = inflater.inflate(R.layout.list_row, null);
-		 * 
-		 * TextView title = (TextView)vi.findViewById(R.id.title); // title
-		 * TextView artist = (TextView)vi.findViewById(R.id.artist); // artist
-		 * name TextView duration = (TextView)vi.findViewById(R.id.duration); //
-		 * duration
-		 * 
-		 * title.setText("2"); artist.setText("3"); duration.setText("4");
-		 * 
-		 * ArrayAdapter<String> adapter1 = new
-		 * ArrayAdapter<String>(getSherlockActivity(), R.layout.list_item,
-		 * mylist); lv.setAdapter(adapter1); //lv.setAdapter(adapter);
-		 * 
-		 * 
-		 * ListAdapter lp;
-		 */
-		// songsList.add(map2);
-		adapter = new ShopListViewAdapter(getActivity(), songsList);
-		lv.setAdapter(adapter);
+		else if (group == 2) {
+			groupByMonth();
+		}
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -262,8 +186,9 @@ public class FragmentTab3b extends SherlockFragment {
 					int position, long id) {
 				// Toast.makeText(getBaseContext(), mListItems.get(position),
 				// 1000).show();
+				Log.d("frag3", "selected");
 				selected = dateList.get(position);
-				Log.d("frag3", selected);
+
 				view.setSelected(true);
 				pos = position;
 				adapter.setSelectedIndex(position);
@@ -303,6 +228,7 @@ public class FragmentTab3b extends SherlockFragment {
 				Log.d("frag3", selected);
 				view.setSelected(true);
 				adapter.setSelectedIndex(currentTab);
+				Log.d("itemclick", "" + selected + " " + group);
 				showDetails(currentTab);
 			}
 			/* Set currently selected tab */
@@ -490,6 +416,31 @@ public class FragmentTab3b extends SherlockFragment {
 			Log.d("fragment3", "baaaack to the futureeee");
 			refreshMainFragment();
 			return true;
+
+		case R.id.order_daily:
+			groupByDay();
+			group = 0;
+			Log.d("groupbyday", "bullshit");
+			if (!isLandscape()) {
+				refreshMainFragment();
+			}
+			return true;
+		case R.id.order_weekly:
+			groupByWeek();
+			Log.d("groupbywek", "bullshit");
+			group = 1;
+			if (!isLandscape()) {
+				refreshMainFragment();
+			}
+			return true;
+		case R.id.order_monthly:
+			groupByMonth();
+			Log.d("groupbymonth", "bullshit");
+			group = 2;
+			if (!isLandscape()) {
+				refreshMainFragment();
+			}
+			return true;
 		default:
 			break;
 		}
@@ -521,7 +472,7 @@ public class FragmentTab3b extends SherlockFragment {
 	public void settingsMenu() {
 		if (MainActivity.dark_bkg == true) {
 			MainActivity.dark_bkg = false;
-			view.setBackgroundColor(Color.WHITE);
+			view.setBackgroundColor(Color.parseColor("#f1f1f2"));
 
 		} else {
 			MainActivity.dark_bkg = true;
@@ -569,5 +520,119 @@ public class FragmentTab3b extends SherlockFragment {
 		ft.commit();
 
 		Log.d("detail2", "" + FragmentTab3b.isDetailActive);
+	}
+
+	public void groupByWeek() {
+		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+		dateList = new ArrayList<String>();
+		listitems = new ArrayList<HashMap<String, String>>();
+
+		List<ShopList> shopitems = db.getSumCostPerWeek();
+
+		for (ShopList cn : shopitems) {
+			String log = "Category: " + cn.getTypeName() + " ,Price: "
+					+ cn.getPrice();
+			// Writing Contacts to log
+			HashMap<String, String> map = new HashMap<String, String>();
+			/*
+			 * String date = cn.getDate(); int year =
+			 * Integer.parseInt(date.substring(0, 4)); int month =
+			 * Integer.parseInt(date.substring(5, 7)); int day =
+			 * Integer.parseInt(date.substring(8, 10));
+			 */int week = cn.getWeek();
+			// Log.d("datum", "" + year + " " + month + " " + day);
+			map.put(KEY_TITLE, "" + cn.getWeek() + ". week");
+			// map.put(KEY_SUBTITLE, ""+cn.getWeek() + ". week");
+			map.put(KEY_CORNER, "" + cn.getPrice() + " ˆ");
+			dateList.add("" + week);
+			listitems.add(map);
+
+			Log.d("Name: ", log);
+		}
+		ArrayList<String> cat = db.getCategories();
+		for (String c : cat) {
+			Log.d("cat", c);
+		}
+
+		db.close();
+
+		adapter = new ShopListViewAdapter(getActivity(), listitems);
+		lv.setAdapter(adapter);
+
+	}
+
+	public void groupByMonth() {
+		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+		dateList = new ArrayList<String>();
+		listitems = new ArrayList<HashMap<String, String>>();
+
+		List<ShopList> shopitems = db.getSumCostPerMonth();
+
+		for (ShopList cn : shopitems) {
+			String log = "Category: " + cn.getTypeName() + " ,Price: "
+					+ cn.getPrice();
+			// Writing Contacts to log
+			HashMap<String, String> map = new HashMap<String, String>();
+			/*
+			 * String date = cn.getDate(); int year =
+			 * Integer.parseInt(date.substring(0, 4)); int month =
+			 * Integer.parseInt(date.substring(5, 7)); int day =
+			 * Integer.parseInt(date.substring(8, 10));
+			 */int month = cn.getMonth();
+			// Log.d("datum", "" + year + " " + month + " " + day);
+			 String monthname = new DateFormatSymbols().getMonths()[month-1];
+			map.put(KEY_TITLE, "" + monthname);
+			// map.put(KEY_SUBTITLE, ""+cn.getWeek() + ". week");
+			map.put(KEY_CORNER, "" + cn.getPrice() + " ˆ");
+			dateList.add("" + month);
+			listitems.add(map);
+
+			Log.d("Name: ", log);
+		}
+
+		db.close();
+
+		adapter = new ShopListViewAdapter(getActivity(), listitems);
+		lv.setAdapter(adapter);
+
+	}
+	
+	public void groupByDay() {
+		dateList = new ArrayList<String>();
+
+		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+
+		listitems = new ArrayList<HashMap<String, String>>();
+
+		List<ShopList> shopitems = db.getSumCostPerDay();
+
+		for (ShopList cn : shopitems) {
+			String log = "Category: " + cn.getTypeName() + " ,Price: "
+					+ cn.getPrice();
+			// Writing Contacts to log
+			HashMap<String, String> map = new HashMap<String, String>();
+			String date = cn.getDate();
+			int year = Integer.parseInt(date.substring(0, 4));
+			int month = Integer.parseInt(date.substring(5, 7));
+			int day = Integer.parseInt(date.substring(8, 10));
+
+			Log.d("datum", "" + year + " " + month + " " + day);
+			map.put(KEY_TITLE, date);
+			map.put(KEY_SUBTITLE, dayOfWeek(year, month, day));
+			map.put(KEY_CORNER, "" + cn.getPrice() + " ˆ");
+			dateList.add(date);
+			listitems.add(map);
+
+			Log.d("Name: ", log);
+		}
+		ArrayList<String> cat = db.getCategories();
+		for (String c : cat) {
+			Log.d("cat", c);
+		}
+
+		db.close();
+
+		adapter = new ShopListViewAdapter(getActivity(), listitems);
+		lv.setAdapter(adapter);
 	}
 }

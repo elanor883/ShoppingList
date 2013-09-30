@@ -89,7 +89,7 @@ public class FragmentTab1 extends SherlockFragment {
 				}
 				if (MainActivity.dark_bkg == false && mView != null) {
 					// ((MainActivity) parent).activePage = 1;
-					mView.setBackgroundColor(Color.WHITE);
+					mView.setBackgroundColor(Color.parseColor("#f1f1f2"));
 				} else if (MainActivity.dark_bkg == true && mView != null) {
 					mView.setBackgroundColor(Color.BLACK);
 				}
@@ -381,7 +381,7 @@ public class FragmentTab1 extends SherlockFragment {
 	public void settingsMenu() {
 		if (MainActivity.dark_bkg == true) {
 			MainActivity.dark_bkg = false;
-			mView.setBackgroundColor(Color.WHITE);
+			mView.setBackgroundColor(Color.parseColor("#f1f1f2"));
 		} else {
 			MainActivity.dark_bkg = true;
 			mView.setBackgroundColor(Color.BLACK);

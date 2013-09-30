@@ -7,6 +7,7 @@ public class ShopList {
     String _date;
     String _type_name;
     int _price;
+    int _week, _month;
      
     // Empty constructor
 
@@ -64,5 +65,25 @@ public class ShopList {
     // setting phone number
     public void setDate(String date){
         this._date = date;
+    }
+    
+    public void setWeek(int week)
+    {
+    	this._week = week;
+    }
+    
+    public int getWeek()
+    {
+    	return this._week;
+    }
+    
+    public void setMonth(int month)
+    {
+    	this._month = month;
+    }
+    
+    public int getMonth()
+    {
+    	return this._month;
     }
 }
