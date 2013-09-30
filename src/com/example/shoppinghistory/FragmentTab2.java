@@ -159,6 +159,7 @@ public class FragmentTab2 extends SherlockFragment {
 			// color =
 			map.put(KEY_COLOR, c.getResid());
 			map.put(KEY_TYPE, c._type_name);
+			Log.d("cat_id", ""+c.getId());
 			labelList.add(map);
 		}
 		// adapter.notifyDataSetChanged();

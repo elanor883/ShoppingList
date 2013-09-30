@@ -48,8 +48,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	// Creating Tables
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String CREATE_SHOPLIST_TABLE = "CREATE TABLE " + TABLE_SHOPLIST + "("
-				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_TYPE_NAME + " TEXT,"
+		String CREATE_SHOPLIST_TABLE = "CREATE TABLE " + TABLE_SHOPLIST
+				+ "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TYPE_NAME
+				+ " TEXT, "
 				+ KEY_PRICE + " INTEGER, " + KEY_DATE + " TEXT" + ")";
 		Log.d("Db", CREATE_SHOPLIST_TABLE);
 		db.execSQL(CREATE_SHOPLIST_TABLE);
@@ -89,7 +90,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// Inserting Row
 		db.insert(TABLE_SHOPLIST, null, values);
 		db.close(); // Closing database connection
-		Log.d("databasehandler", "Row added");
+		Log.d("databasehandler", "Row added" + contact.getId());
 	}
 
 	void addCategory(Categories cat) {
@@ -102,7 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// Inserting Row
 		db.insert(TABLE_CATEGORIES, null, values);
 		db.close(); // Closing database connection
-		Log.d("databasehandler", "Row added - categories");
+		Log.d("databasehandler", "Row added - categories" + cat.getId());
 	}
 
 	// Getting single contact
@@ -275,14 +276,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	}
 
 	public List<ShopList> getLastFewItems(int num) {
-		
+
 		String selectQuery;
 		if(num != 0){
-		selectQuery = "select date, price, type_name from shoplist order by date desc limit "+ num;
+		selectQuery = "select id, date, price, type_name from shoplist order by date desc limit "+ num;
 		}
 		else
 		{
-			selectQuery = "select date, price, type_name from shoplist order by date desc";
+			selectQuery = "select id, date, price, type_name from shoplist order by date desc";
 		}
 
 		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
@@ -293,9 +294,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				ShopList shop_list = new ShopList();
-				shop_list.setDate(cursor.getString(0));
-				shop_list.setPrice(Integer.parseInt(cursor.getString(1)));
-				shop_list.setTypeName(cursor.getString(2));
+				shop_list.setId(Integer.parseInt(cursor.getString(0)));
+				shop_list.setDate(cursor.getString(1));
+				shop_list.setPrice(Integer.parseInt(cursor.getString(2)));
+				shop_list.setTypeName(cursor.getString(3));
 				// Adding contact to list
 				shoppinglistList.add(shop_list);
 			} while (cursor.moveToNext());
@@ -345,7 +347,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static String DB_FILEPATH = "/data/data/com.example.shoppinghistory/databases/" + DATABASE_NAME;
 
 	/**
@@ -368,8 +370,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    }
 	    return false;
 	}
-	
-	
+
+
 	 private void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
 	        FileChannel fromChannel = null;
 	        FileChannel toChannel = null;
@@ -389,4 +391,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	            }
 	        }
 	    }
+	 
+		public void deleteShopRow(int ind) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			db.delete(TABLE_SHOPLIST, KEY_ID + " = ?",
+					new String[] { String.valueOf(ind) });
+			db.close();
+		}
 }

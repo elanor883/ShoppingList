@@ -56,6 +56,9 @@ public class FragmentTab1 extends SherlockFragment {
 	View mView;
 	ShopListViewAdapter mAdapterList;
 	ListView lv;
+	ArrayList<Integer> idArray;
+	int selectedListItem;
+	List<ShopList> clist;
 
 	private static final int MY_DATE_DIALOG_ID = 3;
 
@@ -138,9 +141,9 @@ public class FragmentTab1 extends SherlockFragment {
 		dd = (Button) mView.findViewById(R.id.add_item_button);
 		lv = (ListView) mView.findViewById(R.id.listitem_lv);
 
-
+		idArray = new ArrayList<Integer>();
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
-		List<ShopList> clist = db.getLastFewItems(10);
+		List<ShopList> clist = db.getAllShops();
 		itemList.clear();
 		for (ShopList s : clist) {
 			HashMap<String, String> map = new HashMap<String, String>();
@@ -149,6 +152,8 @@ public class FragmentTab1 extends SherlockFragment {
 			map.put(KEY_SUBTITLE, s.getDate());
 			map.put(KEY_CORNER, "" + s.getPrice() + " ˆ");
 			itemList.add(map);
+			idArray.add(s.getId());
+			Log.d("shop_id", ""+s.getId());
 		}
 		// adapter.notifyDataSetChanged();
 
@@ -257,6 +262,7 @@ public class FragmentTab1 extends SherlockFragment {
 							// lv.setAdapter(adapter);
 							mAdapterList.notifyDataSetChanged();
 
+							refreshLastFewElements(10);
 							dialog.dismiss();
 						}
 					}
@@ -278,7 +284,7 @@ public class FragmentTab1 extends SherlockFragment {
                 return true;
             }
 }); */
-		
+
 		return mView;
 	}
 
@@ -451,23 +457,38 @@ public class FragmentTab1 extends SherlockFragment {
 	      Log.d("fr1", "nyom");
 	      if (v.getId()==R.id.listitem_lv) {
 	    	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-	    	  menu.setHeaderTitle(""+info.position);
+	    	  selectedListItem = info.position;
+	    	  menu.setHeaderTitle(""+info.position + " "+ idArray.get(selectedListItem));
 	    	  android.view.MenuInflater inflater = getActivity().getMenuInflater();
 	          inflater.inflate(R.menu.main2, menu);
 	      }
 	}
 	
 	
-	public boolean onContextItemSelected(MenuItem item) {
-Log.d("fr1", "kijeloles");
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		DatabaseHandler db = new DatabaseHandler(getActivity());
+		//db.deleteShopRow(idArray.get(selectedListItem));
+		if(item.getItemId() == R.id.delete_btn)
+        {
+            Log.d("ContextCheck","EDIT!");
+            //toast = Toast.makeText(this, "Edit!", Toast.LENGTH_SHORT);
+            //toast.show();
+            //db.deleteContact(clist.get(selectedListItem));
+           db.deleteShopRow(idArray.get(selectedListItem));
+            //db.deleteContact(clist.get(selectedListItem));
+        }
+		Log.d("nyomos", ""+selectedListItem + " "+ idArray.get(selectedListItem));
+		refreshLastFewElements(10);
+		db.close();
 	  return true;
 	}
 	
 	public void refreshLastFewElements(int num)
 	{
 		DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
-		List<ShopList> clist = db.getLastFewItems(num);
+		clist = db.getLastFewItems(num);
 		itemList.clear();
+		idArray.clear();
 		for (ShopList s : clist) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			// color =
@@ -475,6 +496,8 @@ Log.d("fr1", "kijeloles");
 			map.put(KEY_SUBTITLE, s.getDate());
 			map.put(KEY_CORNER, "" + s.getPrice() + " ˆ");
 			itemList.add(map);
+			idArray.add(s.getId());
+			Log.d("idarray", ""+s.getId());
 		}
 		// adapter.notifyDataSetChanged();
 
