@@ -80,7 +80,7 @@ public class FragmentTab3b extends SherlockFragment {
 			}*/
 			Log.d("fr3", "visibility" + FragmentTab2.update);
 			
-			if(FragmentTab2.update == true && !isLandscape())
+			if(FragmentTab2.update == true)
 			{
 				FragmentTab2.update = false;
 				Log.d("fr3", "visibility");

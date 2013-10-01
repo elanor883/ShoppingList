@@ -523,4 +523,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			db.close();
 		}
 		
+		public void updateCategory(String old_type, String e_type, String e_resid, int e_id)
+		{
+			//String updateQuery= "UPDATE "+ TABLE_SHOPLIST + " SET " +  KEY_TYPE_NAME +"="+ e_type +", " +KEY_DATE + "=" + e_date + ", " + KEY_PRICE +"="+ e_price + " WHERE " + KEY_ID + "=" +e_id; 
+			SQLiteDatabase db = this.getWritableDatabase();
+			String updateQuery= "UPDATE "+TABLE_CATEGORIES+"  SET type_name='"+e_type+"'," + KEY_RESID + "='" + e_resid+"'  WHERE id="+ e_id;
+			Log.d("update", updateQuery);
+			db.execSQL(updateQuery);
+			updateQuery= "UPDATE "+TABLE_SHOPLIST+"  SET type_name='"+e_type+"'  WHERE type_name='"+ old_type+"'";
+			Log.d("update", updateQuery);
+			db.execSQL(updateQuery);
+		
+
+			
+			db.close();
+
+		}
+		
 }
