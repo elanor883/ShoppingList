@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -55,7 +57,8 @@ public class FragmentTab2 extends SherlockFragment {
 	ListView lv;
 	int selectedListItem;
 	String selectedCat;
-
+	static boolean update = false;
+	
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
 		return super.getSherlockActivity();
@@ -902,10 +905,32 @@ public class FragmentTab2 extends SherlockFragment {
 			public void onClick(View v) {
 
 				Log.d("ContextCheck", "DELETE");
+				AlertDialog.Builder builder1 = new AlertDialog.Builder(
+						getSherlockActivity());
+				builder1.setTitle("Delete category");
+				builder1.setMessage("If you delete the category then all the items which belong to this category will be removed. Are you sure you want to delete this category?");
+				builder1.setCancelable(true);
+				builder1.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
 
-				Log.d("ContextCheck", "EDIT!ttt");
-				db.deleteCategory(selectedCat);
-				refreshCurrentFragment();
+								Log.d("ContextCheck", "EDIT!ttt");
+								db.deleteCategory(selectedCat);
+								refreshCurrentFragment();
+								db.close();
+								update = true;
+							}
+						});
+				builder1.setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+
+				AlertDialog alert11 = builder1.create();
+				alert11.show();
+				
 				dialog.dismiss();
 
 			}

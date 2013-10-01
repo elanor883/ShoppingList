@@ -7,8 +7,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -99,6 +101,11 @@ public class FragmentTab1 extends SherlockFragment {
 
 				else {
 					Log.d("fr1", "kva anyjat enek a szarnak");
+				}
+				
+				if(FragmentTab2.update == true)
+				{
+					refreshCurrentFragment();
 				}
 			}
 
@@ -610,13 +617,34 @@ public class FragmentTab1 extends SherlockFragment {
 
 				Log.d("ContextCheck", "DELETE");
 
-				db.deleteShopRow(idArray.get(selectedListItem));
-				// db.deleteContact(clist.get(selectedListItem));
-				Log.d("nyomos fragment1",
-						"" + selectedListItem + " "
-								+ idArray.get(selectedListItem));
-				refreshLastFewElements(10);
-				db.close();
+				AlertDialog.Builder builder1 = new AlertDialog.Builder(getSherlockActivity());
+	            builder1.setTitle("Delete category");
+				builder1.setMessage("Are you sure you want to delete this item");
+	            builder1.setCancelable(true);
+	            builder1.setPositiveButton("Yes",
+	                    new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                	db.deleteShopRow(idArray.get(selectedListItem));
+	    				// db.deleteContact(clist.get(selectedListItem));
+	    				Log.d("nyomos fragment1",
+	    						"" + selectedListItem + " "
+	    								+ idArray.get(selectedListItem));
+	    				refreshLastFewElements(10);
+	    				db.close();
+	                    //dialog.cancel();
+	                }
+	            });
+	            builder1.setNegativeButton("No",
+	                    new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    dialog.cancel();
+	                }
+	            });
+
+	            AlertDialog alert11 = builder1.create();
+	            alert11.show();
+				
+				
 
 				dialog.dismiss();
 

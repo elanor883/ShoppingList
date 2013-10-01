@@ -518,6 +518,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 					new String[] { String.valueOf(name) });*/
 			Log.d("update", deleteQuery);
 			db.execSQL(deleteQuery);
+			deleteQuery = "DELETE FROM " +TABLE_SHOPLIST +"	 WHERE "+ KEY_TYPE_NAME + "='"+name+"'";
+			db.execSQL(deleteQuery);
 			db.close();
 		}
 		
