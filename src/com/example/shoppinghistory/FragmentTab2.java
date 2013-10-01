@@ -11,12 +11,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -50,6 +53,8 @@ public class FragmentTab2 extends SherlockFragment {
 	SherlockFragmentActivity parent;
 	LabelListAdapter adapter;
 	ListView lv;
+	int selectedListItem;
+	String selectedCat;
 
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -112,7 +117,7 @@ public class FragmentTab2 extends SherlockFragment {
 		} else if (MainActivity.dark_bkg == true && view != null) {
 			view.setBackgroundColor(Color.BLACK);
 		}
-		
+
 	}
 
 	@Override
@@ -130,6 +135,7 @@ public class FragmentTab2 extends SherlockFragment {
 		// set you initial fragment object
 
 		view = inflater.inflate(R.layout.fragmenttab2, container, false);
+		registerForContextMenu(view.findViewById(R.id.cat_lv));
 
 		mInflater = inflater;
 		mContainer = container;
@@ -137,7 +143,6 @@ public class FragmentTab2 extends SherlockFragment {
 
 		setBkg();
 		setHasOptionsMenu(true);
-
 
 		// setHasOptionsMenu(true);
 
@@ -152,7 +157,7 @@ public class FragmentTab2 extends SherlockFragment {
 			// color =
 			map.put(KEY_COLOR, c.getResid());
 			map.put(KEY_TYPE, c._type_name);
-			Log.d("cat_id", ""+c.getId());
+			Log.d("cat_id", "" + c.getId());
 			labelList.add(map);
 		}
 		// adapter.notifyDataSetChanged();
@@ -643,6 +648,26 @@ public class FragmentTab2 extends SherlockFragment {
 
 		});
 
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			public boolean onItemLongClick(AdapterView<?> adapterView,
+					View view, int index, long arg3) { // item: "string line"
+														// that user click
+														// //View
+
+				selectedListItem = index;
+				HashMap<String, String> map = new HashMap<String, String>();
+				map = labelList.get(selectedListItem);
+				selectedCat = map.get(KEY_TYPE);
+
+				Log.d("longclick", "" + selectedCat);
+
+				openMenuDialog();
+				Log.d("Item has been clicked is :", " " + index);
+				return true;
+			}
+		});
+
 		adapter.notifyDataSetChanged();
 		return view;
 
@@ -796,5 +821,96 @@ public class FragmentTab2 extends SherlockFragment {
 		item8.setVisible(false);
 		item9.setVisible(false);
 		super.onPrepareOptionsMenu(menu);
+	}
+
+	/*
+	 * @Override public void onCreateContextMenu(ContextMenu menu, View v,
+	 * ContextMenuInfo menuInfo) { super.onCreateContextMenu(menu, v, menuInfo);
+	 * Log.d("fr2", "nyom"); if (v.getId()==R.id.cat_lv) {
+	 * AdapterView.AdapterContextMenuInfo info =
+	 * (AdapterView.AdapterContextMenuInfo)menuInfo; selectedListItem =
+	 * info.position; HashMap<String, String> map = new HashMap<String,
+	 * String>(); map = labelList.get(selectedListItem); selectedCat =
+	 * map.get(KEY_TYPE); menu.setHeaderTitle(""+info.position + " "+
+	 * map.get(KEY_TYPE)); //menu.setHeaderTitle("Menu");
+	 * android.view.MenuInflater inflater =
+	 * getSherlockActivity().getMenuInflater(); inflater.inflate(R.menu.main3,
+	 * menu);
+	 * 
+	 * Log.d("fr2", "nyommm"); } }
+	 * 
+	 * 
+	 * public boolean onContextItemSelected(android.view.MenuItem item) {
+	 * DatabaseHandler db = new DatabaseHandler(getActivity());
+	 * //db.deleteShopRow(idArray.get(selectedListItem)); if(item.getItemId() ==
+	 * R.id.delete_btn2) { Log.d("ContextCheck","EDIT!ttt"); //toast =
+	 * Toast.makeText(this, "Edit!", Toast.LENGTH_SHORT); //toast.show();
+	 * //db.deleteContact(clist.get(selectedListItem));
+	 * //db.deleteShopRow(idArray.get(selectedListItem));
+	 * //db.deleteContact(clist.get(selectedListItem));
+	 * db.deleteCategory(selectedCat); }
+	 * 
+	 * else if(item.getItemId() == R.id.edit_btn2) {
+	 * Log.d("ContextCheck","edit"); /*HashMap<String, String> map = new
+	 * HashMap<String, String>(); // color = // map.put(KEY_TITLE,
+	 * s.getTypeName()); // map.put(KEY_SUBTITLE, s.getDate()); //
+	 * map.put(KEY_CORNER, "" + s.getPrice() + " ˆ"); map =
+	 * itemList.get(selectedListItem); String type = map.get(KEY_TITLE); String
+	 * date = map.get(KEY_SUBTITLE); String price[] =
+	 * map.get(KEY_CORNER).split(" ");
+	 * 
+	 * Log.d("edit", date + " " + type + " " + price[0]);
+	 * 
+	 * openItemDialog(true, type, date, price[0]); //toast =
+	 * Toast.makeText(this, "Edit!", Toast.LENGTH_SHORT); //toast.show();
+	 * //db.deleteContact(clist.get(selectedListItem)); //
+	 * db.deleteShopRow(idArray.get(selectedListItem));
+	 * //db.deleteContact(clist.get(selectedListItem));
+	 * 
+	 * }
+	 * 
+	 * //Log.d("nyomos", ""+selectedListItem + " "+
+	 * idArray.get(selectedListItem)); //refreshLastFewElements(10); db.close();
+	 * return true; }
+	 */
+
+	public void openMenuDialog() {
+		// custom dialog
+		final Dialog dialog = new Dialog(getActivity());
+
+		dialog.setContentView(R.layout.menu_dialog2);
+		dialog.setTitle("Menu");
+
+		Button editBtn = (Button) dialog.findViewById(R.id.menuEditBtn2);
+		Button deleteBtn = (Button) dialog.findViewById(R.id.menuDeleteBtn2);
+
+		final DatabaseHandler db = new DatabaseHandler(getSherlockActivity());
+
+		editBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Log.d("ContextCheck", "edit");
+
+				dialog.dismiss();
+
+			}
+		});
+
+		deleteBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Log.d("ContextCheck", "DELETE");
+
+				Log.d("ContextCheck", "EDIT!ttt");
+				db.deleteCategory(selectedCat);
+				refreshCurrentFragment();
+				dialog.dismiss();
+
+			}
+		});
+
+		dialog.show();
 	}
 }

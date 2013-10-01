@@ -497,4 +497,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 					new String[] { String.valueOf(ind) });
 			db.close();
 		}
+		
+		public void updateShoppingItem(String e_type, String e_date, int e_price, int e_id)
+		{
+			//String updateQuery= "UPDATE "+ TABLE_SHOPLIST + " SET " +  KEY_TYPE_NAME +"="+ e_type +", " +KEY_DATE + "=" + e_date + ", " + KEY_PRICE +"="+ e_price + " WHERE " + KEY_ID + "=" +e_id; 
+			String updateQuery= "UPDATE shoplist SET type_name='"+e_type+"', date='" + e_date +"', price=" + e_price + " WHERE id="+ e_id;
+			Log.d("update", updateQuery);
+			SQLiteDatabase db = this.getWritableDatabase();
+			db.execSQL(updateQuery);
+			
+			db.close();
+
+		}
+		
+		public void deleteCategory(String name) {
+			Log.d("fos", "fos");
+			SQLiteDatabase db = this.getWritableDatabase();
+			String deleteQuery = "DELETE FROM " +TABLE_CATEGORIES +"	 WHERE "+ KEY_TYPE_NAME + "='"+name+"'";
+			/*db.delete(TABLE_CATEGORIES, KEY_TYPE_NAME + " = ?",
+					new String[] { String.valueOf(name) });*/
+			Log.d("update", deleteQuery);
+			db.execSQL(deleteQuery);
+			db.close();
+		}
+		
 }

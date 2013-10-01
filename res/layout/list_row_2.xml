@@ -3,10 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
+    android:longClickable="true"
     android:orientation="horizontal"
     android:padding="0dip" >
- 
-
  
     <!-- Title Of Song-->
  
@@ -16,10 +15,13 @@
 
     <Button
         android:id="@+id/list_button"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
+        android:layout_width="57sp"
+        android:layout_height="57sp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
     <TextView
         android:id="@+id/category"
