@@ -742,6 +742,7 @@ public class FragmentTab2 extends SherlockFragment {
 
 		case R.id.settings_btn:
 
+			MainActivity.dark_bkg = true;
 			settingsMenu();
 
 			return true;

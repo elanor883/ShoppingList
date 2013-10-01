@@ -78,7 +78,15 @@ public class FragmentTab3b extends SherlockFragment {
 				MainActivity.fr3Imp = false;
 				refreshCurrentFragment();
 			}*/
-
+			Log.d("fr3", "visibility" + FragmentTab2.update);
+			
+			if(FragmentTab2.update == true && !isLandscape())
+			{
+				FragmentTab2.update = false;
+				Log.d("fr3", "visibility");
+				groupByDay();
+				
+			}
 			setBkg();
 			
 			if (adapter != null) {
@@ -88,6 +96,8 @@ public class FragmentTab3b extends SherlockFragment {
 			else {
 				Log.d("fr1", "kva anyjat enek a szarnak");
 			}
+			
+
 		}
 
 		else {

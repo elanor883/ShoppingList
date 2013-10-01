@@ -91,6 +91,12 @@ public class FragmentTab1 extends SherlockFragment {
 					refreshCurrentFragment();
 				}
 
+				if(FragmentTab2.update == true)
+				{
+					FragmentTab2.update = false;
+					refreshCurrentFragment();
+				}
+				
 				setBkg();
 				// itemList.clear();
 				// mAdapterList.notifyDataSetChanged();
@@ -103,10 +109,7 @@ public class FragmentTab1 extends SherlockFragment {
 					Log.d("fr1", "kva anyjat enek a szarnak");
 				}
 				
-				if(FragmentTab2.update == true)
-				{
-					refreshCurrentFragment();
-				}
+
 			}
 
 		} else {
