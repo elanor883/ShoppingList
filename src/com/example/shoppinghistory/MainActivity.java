@@ -1,7 +1,6 @@
 package com.example.shoppinghistory;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +12,6 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 @SuppressLint("NewApi")
 public class MainActivity extends SherlockFragmentActivity {
@@ -105,13 +103,13 @@ public class MainActivity extends SherlockFragmentActivity {
 		mActionBar.addTab(tab);
 
 		// Create third Tab
-		tab = mActionBar.newTab().setText("History")
-				.setTabListener(tabListener);
-		mActionBar.addTab(tab);
-
 		tab = mActionBar.newTab().setText("Statistics")
 				.setTabListener(tabListener);
 		mActionBar.addTab(tab);
+
+		/*tab = mActionBar.newTab().setText("Statistics")
+				.setTabListener(tabListener);
+		mActionBar.addTab(tab);*/
 
 	}
 
@@ -214,9 +212,4 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	
 
-	/*
-	 * @Override public void recreate() { if (android.os.Build.VERSION.SDK_INT
-	 * >= 11) { super.recreate(); } else { dark_bkg = false;
-	 * startActivity(getIntent()); // finish(); } }
-	 */
 }

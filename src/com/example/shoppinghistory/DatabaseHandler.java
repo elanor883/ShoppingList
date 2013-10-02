@@ -128,7 +128,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public List<ShopList> getAllShops() {
 		List<ShopList> shoppinglistList = new ArrayList<ShopList>();
 		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABLE_SHOPLIST;
+		String selectQuery = "SELECT  * FROM " + TABLE_SHOPLIST + " ORDER BY date DESC";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);

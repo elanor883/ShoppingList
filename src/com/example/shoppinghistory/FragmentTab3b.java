@@ -347,6 +347,15 @@ public class FragmentTab3b extends SherlockFragment {
 	// }
 
 	// }
+	/*
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    // TODO Add your menu entries here
+		inflater = getSherlockActivity().getSupportMenuInflater();
+		inflater.inflate(R.menu.fr3_menu, menu);
+	    super.onCreateOptionsMenu(menu, inflater);
+	}
+	*/
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
@@ -361,7 +370,7 @@ public class FragmentTab3b extends SherlockFragment {
 		item8 = menu.findItem(R.id.order_monthly);
 		item9 = menu.findItem(R.id.back_btn);
 
-		item.setVisible(false);
+	item.setVisible(false);
 		item2.setVisible(false);
 		item3.setVisible(false);
 		item4.setVisible(false);

@@ -8,17 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -27,9 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -62,6 +57,7 @@ public class FragmentTab1 extends SherlockFragment {
 	ArrayList<Integer> idArray;
 	int selectedListItem;
 	List<ShopList> clist;
+	Menu mymenu;
 
 	private static final int MY_DATE_DIALOG_ID = 3;
 
@@ -82,6 +78,8 @@ public class FragmentTab1 extends SherlockFragment {
 
 		if (isVisibleToUser) {
 
+
+			
 			Log.d("visiblefr1", "" + MainActivity.fr1Imp);
 			parent = getSherlockActivity();
 			if (isVisibleToUser) {
@@ -335,10 +333,19 @@ public class FragmentTab1 extends SherlockFragment {
 	 * super.onCreateOptionsMenu(menu, inflater); inflater.inflate(R.menu.main2,
 	 * menu); }
 	 */
-
+/*
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    // TODO Add your menu entries here
+		inflater = getSherlockActivity().getSupportMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+	    super.onCreateOptionsMenu(menu, inflater);
+	}
+	*/
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 
+		mymenu = menu;
 		MenuItem item = menu.findItem(R.id.imp_btn);
 		MenuItem item2 = menu.findItem(R.id.exp_btn);
 		MenuItem item3 = menu.findItem(R.id.last_10);
@@ -451,8 +458,13 @@ public class FragmentTab1 extends SherlockFragment {
 		final Dialog dialog = new Dialog(getActivity());
 
 		dialog.setContentView(R.layout.customdialog);
+		if(!edit){
 		dialog.setTitle("Add new item");
-
+		}
+		else
+		{
+			dialog.setTitle("Edit item");
+		}
 		// set the custom dialog components - text, image and button
 		final EditText text_price = (EditText) dialog
 				.findViewById(R.id.editText1);

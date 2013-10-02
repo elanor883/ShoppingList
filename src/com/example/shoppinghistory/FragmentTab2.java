@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -61,6 +62,7 @@ public class FragmentTab2 extends SherlockFragment {
 	String selectedResid;
 	static boolean update = false;
 	List<Categories> clist;
+	Menu mymenu;
 	
 	@Override
 	public SherlockFragmentActivity getSherlockActivity() {
@@ -94,6 +96,22 @@ public class FragmentTab2 extends SherlockFragment {
 
 		Log.d("visiblefr2", "" + MainActivity.fr1Imp);
 		if (isVisibleToUser) {
+			
+			if (Build.VERSION.SDK_INT >= 11)
+			{
+			    getSherlockActivity().supportInvalidateOptionsMenu();
+			}
+			else
+			{
+				if(mymenu != null)
+				{
+					onPrepareOptionsMenu(mymenu);
+					//MenuItem item8 = mymenu.findItem(R.id.order_monthly);
+					//item8.setVisible(false);
+				}
+			}
+			
+			
 			if (MainActivity.fr2Imp == true) {
 				MainActivity.fr2Imp = false;
 				Log.d("fragment2", "visible import");
@@ -148,7 +166,7 @@ public class FragmentTab2 extends SherlockFragment {
 		mSavedInstanceState = savedInstanceState;
 
 		setBkg();
-		setHasOptionsMenu(false);
+		setHasOptionsMenu(true);
 
 		// setHasOptionsMenu(true);
 
@@ -330,9 +348,13 @@ public class FragmentTab2 extends SherlockFragment {
 
 	}
 
+
+	
+	
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 
+		mymenu = menu;
 		MenuItem item = menu.findItem(R.id.imp_btn);
 		MenuItem item2 = menu.findItem(R.id.exp_btn);
 		MenuItem item3 = menu.findItem(R.id.last_10);
@@ -473,10 +495,16 @@ public class FragmentTab2 extends SherlockFragment {
 
 public void openCategoryDialog(final boolean edit)
 {
-	setRetainInstance(true);
+	//setRetainInstance(true);
 	final Dialog dialog = new Dialog(getActivity());
 	dialog.setContentView(R.layout.customdialog2);
+	if(!edit){
 	dialog.setTitle("Add new category");
+	}
+	else
+	{
+		dialog.setTitle("Edit category");
+	}
 
 	// set the custom dialog components - text, image and button
 	final EditText text_cat = (EditText) dialog
